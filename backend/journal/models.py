@@ -51,7 +51,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
 
-class JournalEntry(models.Model):
+class Journal(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='journal_entries')
     title = models.CharField(max_length=255)
     content = models.TextField()
