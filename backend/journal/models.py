@@ -43,7 +43,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     date_joined = models.DateTimeField(verbose_name='date joined', auto_now_add=True)
     picture =  models.FileField(upload_to='profile/%Y:%m:%d', null=True)  
     is_active = models.BooleanField(default=True)
-    is_admin = models.BooleanField(default=False)
     password = models.CharField( max_length=100)
 
     USERNAME_FIELD = 'email'
