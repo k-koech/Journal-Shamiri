@@ -89,11 +89,14 @@ def update_user(request):
         user = User.objects.get(id=user_id)
     except User.DoesNotExist:
         return JsonResponse({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
-    
+    if user.id != user_id:
+        return JsonResponse({"error": "You do not have permission to update this account"}, status=status.HTTP_403_FORBIDDEN)
+        
     serializer = UserSerializer(user, data=request.data, partial=True)
     if serializer.is_valid():
         serializer.save()
         return JsonResponse({"success":"User Updated Successfully"}, status=status.HTTP_200_OK)
+    print("OPPPO",serializer.errors)
     return JsonResponse({"error":"Error updating"}, status=status.HTTP_400_BAD_REQUEST)
 
 
