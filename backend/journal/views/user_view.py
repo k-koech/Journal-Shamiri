@@ -6,12 +6,8 @@ from journal.models import User
 from django.contrib.auth.hashers import make_password
 from journal.serializer import UserSerializer
 from rest_framework.permissions import IsAuthenticated
-from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
 
-# Create your views here.
-def home(request):
-    # return JsonResponse({'info': 'Journal Home'}, status=200)
-    return JsonResponse({"error":"User does not exist, please register with google first!"}, status=status.HTTP_406_NOT_ACCEPTABLE)
 
 # Sign Up
 @api_view(['POST'])
@@ -45,6 +41,44 @@ def signup(request):
             return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+# Current User
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def current_user(request):
+    serializer = UserSerializer(request.user)
+    return JsonResponse(serializer.data)
+
+# Logout
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
+from rest_framework.views import APIView
+
+class CustomLogoutView(APIView):
+    def post(self, request, *args, **kwargs):
+        refresh_token = request.data.get('refresh')
+        access_token = request.headers.get('Authorization', None)
+        
+        if access_token:
+            access_token = access_token.split(' ')[1]  # Extract the token from the "Bearer <token>" format
+        
+        if refresh_token:
+            try:
+                token = RefreshToken(refresh_token)
+                token.blacklist()  # Blacklist the refresh token
+            except TokenError as e:
+                return JsonResponse({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        
+        if access_token:
+            try:
+                token = RefreshToken(access_token)
+                token.blacklist() 
+            except TokenError as e:
+                return JsonResponse({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        
+        return JsonResponse({"error": "Successfully logged out"}, status=status.HTTP_205_RESET_CONTENT)
+
+
+
 
 # Update User
 @api_view(['PUT'])
@@ -59,8 +93,8 @@ def update_user(request):
     serializer = UserSerializer(user, data=request.data, partial=True)
     if serializer.is_valid():
         serializer.save()
-        return JsonResponse(serializer.data)
-    return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return JsonResponse({"success":"User Updated Successfully"}, status=status.HTTP_200_OK)
+    return JsonResponse({"error":"Error updating"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 # Delete User
@@ -77,4 +111,4 @@ def delete_user(request):
         return JsonResponse({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
     
     user.delete()
-    return JsonResponse(status=status.HTTP_204_NO_CONTENT)
+    return JsonResponse({"success":"Deleted successfully"},status=200)
