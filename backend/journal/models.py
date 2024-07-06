@@ -57,4 +57,4 @@ class Journal(models.Model):
     title = models.CharField(max_length=255)
     content = models.TextField()
     category = models.CharField(max_length=100)
-    date = models.DateField()
+    date = models.DateField(auto_now=True)
