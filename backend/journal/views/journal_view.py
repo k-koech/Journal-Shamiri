@@ -62,6 +62,8 @@ def edit_journal_entry(request, entry_id):
         return JsonResponse({"success":"Updated successfully"})
     return JsonResponse({"error":"Error updating journal"}, status=status.HTTP_400_BAD_REQUEST)
 
+
+
 # Delete Journal Entry
 @api_view(['DELETE'])
 def delete_journal_entry(request, entry_id):
@@ -109,16 +111,14 @@ def summary_between_dates(request):
     total_entries = entries.count()
     entries_by_category = entries.values('category').annotate(total=models.Count('category'))
 
-    # Create a detailed list of journal entries
     entries_list = list(entries.values('id', 'title', 'content', 'category', 'date'))
 
-    # Prepare the summary data
     summary = {
         "start_date": start_date,
         "end_date": end_date,
         "total_entries": total_entries,
-        "entries_by_category": list(entries_by_category),  # Ensure this is a list of dictionaries
-        "entries": entries_list  # Ensure this is a list of dictionaries
+        "entries_by_category": list(entries_by_category),  
+        "entries": entries_list  
     }
 
     return JsonResponse(summary, status=status.HTTP_200_OK)
