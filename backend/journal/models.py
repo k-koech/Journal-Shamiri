@@ -41,6 +41,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=50, null=True) 
     phone_number = models.CharField(max_length=13, unique=True, null=True)
     date_joined = models.DateTimeField(verbose_name='date joined', auto_now_add=True)
+    last_login = models.DateTimeField(verbose_name='last login', auto_now=True)
     picture =  models.FileField(upload_to='profile/%Y:%m:%d', null=True)  
     is_active = models.BooleanField(default=True)
     password = models.CharField( max_length=100)
