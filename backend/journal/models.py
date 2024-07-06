@@ -53,8 +53,14 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 class Journal(models.Model):
+    CATEGORY_CHOICES = [
+        ('Personal', 'Personal'),
+        ('Work', 'Work'),
+        ('Tavel', 'Travel'),
+        ('Other', 'Other'),
+    ]
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='journal_entries')
     title = models.CharField(max_length=255)
     content = models.TextField()
-    category = models.CharField(max_length=100)
+    category = models.CharField(max_length=100, choices=CATEGORY_CHOICES, default='personal')
     date = models.DateField(auto_now=True)

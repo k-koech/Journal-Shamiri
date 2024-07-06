@@ -11,6 +11,15 @@ from rest_framework_simplejwt.tokens import RefreshToken
 @api_view(['POST'])
 def create_journal_entry(request):
     serializer = JournalSerializer(data=request.data)
+
+    valid_categories = [choice[0] for choice in Journal.CATEGORY_CHOICES]
+
+    if request.data.get('category') not in valid_categories:
+        return JsonResponse(
+            {"error": "Invalid category. Choose from: Personal, Work, Travel, Other."},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
     if serializer.is_valid():
         serializer.save(user=request.user)
         return JsonResponse({"success":"Added successfully"}, status=status.HTTP_201_CREATED)
@@ -35,6 +44,14 @@ def edit_journal_entry(request, entry_id):
     if entry.user != current_user:
         return JsonResponse({"error": "You are not authorized to delete this entry"}, status=status.HTTP_401_UNAUTHORIZED)
    
+
+    valid_categories = [choice[0] for choice in Journal.CATEGORY_CHOICES]
+    if request.data.get('category') not in valid_categories:
+        return JsonResponse(
+            {"error": "Invalid category. Choose from: Personal, Work, Travel, Other."},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
     serializer = JournalSerializer(entry, data=request.data, partial=True)
     if serializer.is_valid():
         serializer.save()
