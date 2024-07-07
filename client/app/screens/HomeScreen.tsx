@@ -1,6 +1,6 @@
 import { View,Button, Text,StatusBar, ScrollView, SafeAreaView, TextInput, TouchableOpacity, Touchable } from 'react-native'
 import React,{useState} from 'react'
-import { Ionicons } from '@expo/vector-icons'
+import { AntDesign, Ionicons } from '@expo/vector-icons'
 import { LinearGradient } from 'expo-linear-gradient';
 
 export default function HomeScreen({ navigation }: { navigation: any })
@@ -35,8 +35,17 @@ export default function HomeScreen({ navigation }: { navigation: any })
         </View>
       </View>
 
+      <View className='flex flex-row items-center justify-between rounded-lg mt-4'>
+        <Text className='text-lg'>Filter Journals by Date</Text>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('Journal')}
+          className='w-[13%] xbg-blue-500 p-2 rounded-lg justify-center items-center'
+        >
+          <AntDesign name="filter" size={24} color="#009FC6" />
+        </TouchableOpacity>
+      </View>
 
-      <View className='flex flex-row items-center justify-between border border-gray-300 rounded-lg mt-4'>
+      {/* <View className='flex flex-row items-center justify-between border border-gray-300 rounded-lg mt-4'>
         <TextInput
           className='w-[82%] placeholder-gray-500 p-2 '
           placeholder='Search Journal'
@@ -47,7 +56,7 @@ export default function HomeScreen({ navigation }: { navigation: any })
         >
           <Ionicons name="search" size={24} color="#009FC6" />
         </TouchableOpacity>
-      </View>
+      </View> */}
  
       <Text className='text-2xl mt-8' style={{fontFamily: 'poppins'}}>Categories</Text>
       <View className='flex flex-row justify- gap-4 flex-wrap  mt-2'>

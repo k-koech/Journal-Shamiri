@@ -31,7 +31,7 @@ export default function index() {
     <Stack.Navigator initialRouteName="Auth">
       {/* <Stack.Screen name="Auth" component={AuthScreen}  options={{headerShown: false}} /> */}
       <Stack.Screen name="tabs" component={TabNavigations}   options={{headerShown: false}} />
-      <Stack.Screen name="Journal" component={JournalScreen} /> 
+      <Stack.Screen name="Journal" component={JournalScreen} options={{headerShown: false }}/> 
       <Stack.Screen name="JournalDetail" component={JournalDetailScreen} options={{headerShown: false}} />
       
       <Stack.Screen name="Summary" component={SummaryScreen} /> 
