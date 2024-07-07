@@ -15,7 +15,7 @@ export default function index() {
   return (
     <NavigationContainer independent={true}>
     <Stack.Navigator initialRouteName="Auth">
-      <Stack.Screen name="Auth" component={AuthScreen} />
+      <Stack.Screen name="Auth" component={AuthScreen}  options={{headerShown: false}} />
       <Stack.Screen name="Home" component={HomeScreen} />
       <Stack.Screen name="Journal" component={JournalScreen} />
       <Stack.Screen name="JournalDetail" component={JournalDetailScreen} />
