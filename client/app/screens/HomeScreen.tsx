@@ -57,23 +57,6 @@ export default function HomeScreen({ navigation }: { navigation: any })
           </TouchableOpacity>
         ))}
 
-
-        {/* <TouchableOpacity className='flex flex-row justify-between items-center bg-[#026D87] py-2 px-6 rounded-lg'>
-          <Text className='text-white'>Personal</Text>
-          <Ionicons name="chevron-forward" size={14} color="#009FC6" />
-        </TouchableOpacity>
-        <TouchableOpacity className='flex flex-row justify-between items-center bg-[#026D87] py-2 px-6 rounded-lg mt-4'>
-          <Text className='text-white'>Work</Text>
-          <Ionicons name="chevron-forward" size={14} color="#009FC6" />
-        </TouchableOpacity>
-        <TouchableOpacity className='flex flex-row justify-between items-center bg-white border border-[#009FC6] py-2 px-6 rounded-lg mt-4'>
-          <Text className='text-gray-600'>Travel</Text>
-          <Ionicons name="chevron-forward" size={14} color="black" />
-        </TouchableOpacity>
-        <TouchableOpacity className='flex flex-row justify-between items-center bg-white border border-[#009FC6] py-2 px-6 rounded-lg mt-4'>
-          <Text className='text-gray-600'>Other</Text>
-          <Ionicons name="chevron-forward" size={14} color="black" />
-        </TouchableOpacity> */}
       </View>
 
 
@@ -85,7 +68,7 @@ export default function HomeScreen({ navigation }: { navigation: any })
 
             <View>
             { [1, 2, 3, 4,5,6,7].map((item) => (
-              <View className='flex min-h-[10vh] flex-row justify-between jhitems-center border border-gray-300 rounded-lg mb-4'>
+              <TouchableOpacity onPress={() => navigation.navigate("JournalDetail") } className='flex min-h-[10vh] flex-row justify-between jhitems-center border border-gray-300 rounded-lg mb-4'>
                   <View className='w-[20%] jh-full rounded-lg bg-[#026D87] flex justify-center items-center'>
                     <Text className='text-white text-2xl font-bold'>J</Text>
                   </View>
@@ -100,7 +83,7 @@ export default function HomeScreen({ navigation }: { navigation: any })
                      <Ionicons name="chevron-forward" size={24} color="#009FC6" />
                   </View>
                 </View>
-              </View>
+              </TouchableOpacity>
             ))}
               
             </View>

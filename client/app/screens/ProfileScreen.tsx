@@ -56,6 +56,12 @@ const ProfileScreen: React.FC = () => {
           </View>
         </View>
       </View>
+
+      <TouchableOpacity className="p-2 mt-8"
+        onPress={() => console.log("Logout")}
+      >
+        <Text className="text-red-600 text-center text-lg" style={{fontFamily:"roboto"}}>Logout</Text>
+      </TouchableOpacity>
       
       {/* Update Button */}
       <TouchableOpacity
