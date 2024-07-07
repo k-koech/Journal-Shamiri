@@ -18,10 +18,10 @@ export default function index() {
     <Stack.Navigator initialRouteName="Auth">
       {/* <Stack.Screen name="Auth" component={AuthScreen}  options={{headerShown: false}} /> */}
       <Stack.Screen name="Home" component={TabNavigations}   options={{headerShown: false}} />
-      {/* <Stack.Screen name="Journal" component={JournalScreen} /> */}
-      {/* <Stack.Screen name="JournalDetail" component={JournalDetailScreen} />
+      <Stack.Screen name="Journal" component={JournalScreen} /> 
+      <Stack.Screen name="JournalDetail" component={JournalDetailScreen} />
       
-      <Stack.Screen name="Summary" component={SummaryScreen} /> */}
+      <Stack.Screen name="Summary" component={SummaryScreen} /> 
     </Stack.Navigator>
   </NavigationContainer>
   )

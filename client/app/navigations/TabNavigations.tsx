@@ -3,8 +3,9 @@ import React from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import HomeScreen from '../screens/HomeScreen';
 import ProfileScreen from '../screens/ProfileScreen';
-import AntDesign from '@expo/vector-icons/AntDesign';
+import {AntDesign, Ionicons} from '@expo/vector-icons';
 import CustomHeader from '../components/CustomHeader';
+import AddJournalScreen from '../screens/AddJournalScreen';
 const Tab = createBottomTabNavigator();
 
 export default function TabNavigations() {
@@ -12,7 +13,7 @@ export default function TabNavigations() {
     <Tab.Navigator
     screenOptions={({ route }) => ({
         tabBarShowLabel: false,
-        header: () => <CustomHeader title={route.name} />,
+        // header: () => <CustomHeader title={route.name} />,
         tabBarStyle: {
           position: "absolute",
           right: 10,
@@ -29,21 +30,22 @@ export default function TabNavigations() {
     <Tab.Screen name="Home" component={HomeScreen}
      options={{
         headerTitle: 'Home',
+        headerShown: false,
         tabBarIcon: ({ focused }) => (
           <View className="flex items-center justify-center">
-            <AntDesign name="home" size={24} color={focused ? "" : "#009FC6"} />
-            <Text style={{ color: focused ? "" : "#009FC6" }}>Home</Text>
+            <AntDesign name="home" size={24} color={focused ? "#026D87" : "#009FC6"} />
+            <Text style={{ color: focused ? "#026D87" : "#009FC6" }}>Home</Text>
           </View>
         )
 
     }}
     />
-    <Tab.Screen name="Add Journal" component={ProfileScreen} 
+    <Tab.Screen name="Add Journal" component={AddJournalScreen} 
                options={{
                 tabBarIcon: ({ focused }) => (
                   <View className="flex items-center justify-center">
-                    <AntDesign name="user" size={24} color={focused ? "" : "#009FC6"} />
-                    <Text style={{ color: focused ? "" : "#009FC6" }}>Profile</Text>
+                    <Ionicons name="add-circle-outline" size={24} color={focused ? "#026D87" : "#009FC6"} />
+                    <Text style={{ color: focused ? "#026D87" : "#009FC6" }}>Add Journal</Text>
                   </View>
                 )
         
@@ -54,8 +56,8 @@ export default function TabNavigations() {
             headerTitle: 'Profile',
             tabBarIcon: ({ focused }) => (
               <View className="flex items-center justify-center">
-                <AntDesign name="user" size={24} color={focused ? "" : "#009FC6"} />
-                <Text style={{ color: focused ? "" : "#009FC6" }}>Profile</Text>
+                <AntDesign name="user" size={24} color={focused ? "#026D87" : "#009FC6"} />
+                <Text style={{ color: focused ? "#026D87" : "#009FC6" }}>Profile</Text>
               </View>
             )
     
