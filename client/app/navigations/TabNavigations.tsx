@@ -13,7 +13,6 @@ export default function TabNavigations() {
     <Tab.Navigator backBehavior="history"
     screenOptions={({ route }) => ({
         tabBarShowLabel: false,
-        // header: () => <CustomHeader title={route.name} />,
         tabBarStyle: {
           position: "absolute",
           right: 10,
@@ -55,6 +54,7 @@ export default function TabNavigations() {
     <Tab.Screen name="Profile" component={ProfileScreen} 
            options={{
             headerTitle: 'Profile',
+            headerShown: false,
             tabBarIcon: ({ focused }) => (
               <View className="flex items-center justify-center">
                 <AntDesign name="user" size={24} color={focused ? "#026D87" : "#009FC6"} />
