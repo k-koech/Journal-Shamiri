@@ -1,16 +1,21 @@
-import { View,Button, Text, ScrollView, SafeAreaView, TextInput, TouchableOpacity } from 'react-native'
+import { View,Button, Text,StatusBar, ScrollView, SafeAreaView, TextInput, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { Ionicons } from '@expo/vector-icons'
+import { LinearGradient } from 'expo-linear-gradient';
 
 export default function HomeScreen({ navigation }: { navigation: any }) {
-  return (
+  return ( 
+    <SafeAreaView className="flex-1">   
+    <StatusBar translucent backgroundColor="transparent"/>
+
+  <LinearGradient colors={['#E0F9FF', '#EDFBFF']} style={{flex: 1}}>
   <ScrollView className=" flex-1 p-4 bg-gradient-to-r from-cyan-500 to-blue-500 mb-24 pb-4 ">
       <View className='flex flex-row justify-between items-center'>
         <View className='mt-8'>
-          <Text className="text-2xl mb-2">Hi Kelvin</Text>
+          <Text className="text-2xl mb-2 font-thin" style={{fontFamily:"poppins"}}>Hi Kelvin</Text>
           <View>
             <Text className="text-2xl mb-2">Welcome to </Text>        
-            <Text className="text-6xl font-bold mb-2">Journal</Text>
+            <Text className="text-8xl mb-2 text-[#026D87]" style={{fontFamily: 'dancing_script'}}>Journal</Text>
           </View>
         </View>
         <View className='flex justify-center items-center'>
@@ -36,7 +41,7 @@ export default function HomeScreen({ navigation }: { navigation: any }) {
       </View>
 
       <View className='flex mt-8'>
-        <Text className='text-2xl mb-2'>Journals</Text>
+        <Text className='text-2xl mb-2' style={{fontFamily: 'poppins'}}>Journals</Text>
         <View>
           <View>
 
@@ -65,7 +70,8 @@ export default function HomeScreen({ navigation }: { navigation: any }) {
         </View>
 
       </View>
-      
-    </ScrollView>
+    </ScrollView>      
+    </LinearGradient>
+</SafeAreaView>
   )
 }
