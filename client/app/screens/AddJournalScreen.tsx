@@ -43,7 +43,7 @@ const AddJournalScreen: React.FC = () => {
         onPress={() => navigation.goBack()}
         className='absolute top-4 left-4'
       >
-        <Ionicons name="arrow-back" size={24} color="black" />
+        <Ionicons name="chevron-back" size={28} color="black" />
       </TouchableOpacity>
 
      <View className='flex-1 justify-center '>
