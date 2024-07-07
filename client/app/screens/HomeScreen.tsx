@@ -1,14 +1,23 @@
-import { View,Button, Text,StatusBar, ScrollView, SafeAreaView, TextInput, TouchableOpacity } from 'react-native'
-import React from 'react'
+import { View,Button, Text,StatusBar, ScrollView, SafeAreaView, TextInput, TouchableOpacity, Touchable } from 'react-native'
+import React,{useState} from 'react'
 import { Ionicons } from '@expo/vector-icons'
 import { LinearGradient } from 'expo-linear-gradient';
 
-export default function HomeScreen({ navigation }: { navigation: any }) {
+export default function HomeScreen({ navigation }: { navigation: any })
+ {
+  const [clickedCategory, setClickedCategory] = useState('')
+
+  const categories = ['Personal', 'Work', 'Travel', 'Other']
+
+  const handleCategoryPress = (category: string) => {
+    setClickedCategory(category)
+  }
+
   return ( 
     <SafeAreaView className="flex-1">   
     <StatusBar translucent backgroundColor="transparent"/>
 
-  <LinearGradient colors={['#E0F9FF', '#EDFBFF']} style={{flex: 1}}>
+  <LinearGradient colors={['#E0F9FF', '#fff', "#F1FCFF", "#fff"]} style={{flex: 1}}>
   <ScrollView className=" flex-1 p-4 bg-gradient-to-r from-cyan-500 to-blue-500 mb-24 pb-4 ">
       <View className='flex flex-row justify-between items-center'>
         <View className='mt-8'>
@@ -39,6 +48,35 @@ export default function HomeScreen({ navigation }: { navigation: any }) {
           <Ionicons name="search" size={24} color="#009FC6" />
         </TouchableOpacity>
       </View>
+ 
+      <Text className='text-2xl mt-8' style={{fontFamily: 'poppins'}}>Categories</Text>
+      <View className='flex flex-row justify-between gap-2 flex-wrap  mt-2'>
+        {categories.map((category) => (
+          <TouchableOpacity onPress={()=>handleCategoryPress(category)} key={category} className={` ${clickedCategory==category ? "bg-[#026D87]": "bg-white "}  border border-[#026D87] py-2 px-6 rounded-lg`}>
+            <Text className={` ${clickedCategory==category ? "text-white":"" } px-1.5`}>{category}</Text>
+          </TouchableOpacity>
+        ))}
+
+
+        {/* <TouchableOpacity className='flex flex-row justify-between items-center bg-[#026D87] py-2 px-6 rounded-lg'>
+          <Text className='text-white'>Personal</Text>
+          <Ionicons name="chevron-forward" size={14} color="#009FC6" />
+        </TouchableOpacity>
+        <TouchableOpacity className='flex flex-row justify-between items-center bg-[#026D87] py-2 px-6 rounded-lg mt-4'>
+          <Text className='text-white'>Work</Text>
+          <Ionicons name="chevron-forward" size={14} color="#009FC6" />
+        </TouchableOpacity>
+        <TouchableOpacity className='flex flex-row justify-between items-center bg-white border border-[#009FC6] py-2 px-6 rounded-lg mt-4'>
+          <Text className='text-gray-600'>Travel</Text>
+          <Ionicons name="chevron-forward" size={14} color="black" />
+        </TouchableOpacity>
+        <TouchableOpacity className='flex flex-row justify-between items-center bg-white border border-[#009FC6] py-2 px-6 rounded-lg mt-4'>
+          <Text className='text-gray-600'>Other</Text>
+          <Ionicons name="chevron-forward" size={14} color="black" />
+        </TouchableOpacity> */}
+      </View>
+
+
 
       <View className='flex mt-8'>
         <Text className='text-2xl mb-2' style={{fontFamily: 'poppins'}}>Journals</Text>
