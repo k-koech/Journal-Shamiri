@@ -74,12 +74,15 @@ export default function HomeScreen({ navigation }: { navigation: any })
                   </View>
 
                 <View className='flex-1 flex-row justify-between '>                  
-                  <View className='px-2'>
+                  <View className='px-2 flex-1'>
                     <Text className='text-xl'>Title</Text>
-                    <Text className=''>Title</Text>
-                    <Text className='text-sm text-gray-700'>Date</Text>
+                    <Text className=''>Description</Text>
+                    <View className='flex w-full flex-row items-center justify-between'>
+                      <Text className='text-sm text-white bg-[#026D87] rounded-sm px-1.5'>Personal</Text>                    
+                      <Text className='text-sm text-gray-700'>12-12-2024</Text>
+                    </View>
                   </View>
-                  <View className='flex justify-center'>
+                  <View className='flex justify-center w-6'>
                      <Ionicons name="chevron-forward" size={24} color="#009FC6" />
                   </View>
                 </View>
