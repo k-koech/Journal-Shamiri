@@ -10,7 +10,7 @@ const Tab = createBottomTabNavigator();
 
 export default function TabNavigations() {
   return (
-    <Tab.Navigator
+    <Tab.Navigator backBehavior="history"
     screenOptions={({ route }) => ({
         tabBarShowLabel: false,
         // header: () => <CustomHeader title={route.name} />,
@@ -42,6 +42,7 @@ export default function TabNavigations() {
     />
     <Tab.Screen name="Add Journal" component={AddJournalScreen} 
                options={{
+                headerShown: false,
                 tabBarIcon: ({ focused }) => (
                   <View className="flex items-center justify-center">
                     <Ionicons name="add-circle-outline" size={24} color={focused ? "#026D87" : "#009FC6"} />
