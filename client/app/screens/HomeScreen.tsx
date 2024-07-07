@@ -5,9 +5,9 @@ import { LinearGradient } from 'expo-linear-gradient';
 
 export default function HomeScreen({ navigation }: { navigation: any })
  {
-  const [clickedCategory, setClickedCategory] = useState('')
+  const [clickedCategory, setClickedCategory] = useState('All')
 
-  const categories = ['Personal', 'Work', 'Travel', 'Other']
+  const categories = ["All", 'Personal', 'Work', 'Travel', 'Other']
 
   const handleCategoryPress = (category: string) => {
     setClickedCategory(category)
@@ -50,7 +50,7 @@ export default function HomeScreen({ navigation }: { navigation: any })
       </View>
  
       <Text className='text-2xl mt-8' style={{fontFamily: 'poppins'}}>Categories</Text>
-      <View className='flex flex-row justify-between gap-2 flex-wrap  mt-2'>
+      <View className='flex flex-row justify- gap-4 flex-wrap  mt-2'>
         {categories.map((category) => (
           <TouchableOpacity onPress={()=>handleCategoryPress(category)} key={category} className={` ${clickedCategory==category ? "bg-[#026D87]": "bg-white "}  border border-[#026D87] py-2 px-6 rounded-lg`}>
             <Text className={` ${clickedCategory==category ? "text-white":"" } px-1.5`}>{category}</Text>
