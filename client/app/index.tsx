@@ -13,7 +13,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import Spinner from './components/Spinner';
 import ToastManager from 'toastify-react-native';
 import { View } from 'react-native';
-import { AuthProvider } from './context/AuthContext';
+import { AuthContext, AuthProvider } from './context/AuthContext';
 
 const Stack = createStackNavigator();
 
@@ -42,9 +42,8 @@ export default function index() {
 
 
 function App() {
+  const { current_user } = React.useContext(AuthContext);
 
-
- const current_user = null;
 
 
   return (

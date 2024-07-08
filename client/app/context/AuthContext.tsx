@@ -6,10 +6,14 @@ import { Toast } from 'toastify-react-native';
 
 
 
+interface TokenPair {
+  access: string;
+  refresh: string;
+}
 interface AuthContextType {
   isSignup: boolean;
   current_user: User | null;
-  token_pair: { access_token: string, refresh_token: string };
+  token_pair?: TokenPair | null;
   login: (email: string, password: string) => void;
   logout: () => void;
   register: (userData: Partial<User>) => void;
@@ -22,9 +26,30 @@ export const AuthContext = createContext<AuthContextType | undefined>(undefined)
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
 {
   const [current_user, setCurrentUser] = useState<User | null>(null);
-  const [token_pair, setTokenPair] = useState( AsyncStorage.getItem("TOKEN_PAIR")? AsyncStorage.getItem("TOKEN_PAIR"): { access_token: '', refresh_token: '' });
+  const [token_pair, setTokenPair] = useState<TokenPair | null>(null);
+  const [isSignup, setIsSignup] = useState<boolean>(false);
 
-  const [isSignup, setIsSignup] = useState<boolean>(true);
+  
+  useEffect(() => {
+    const getAuthTokens = async () => {
+      try {
+        const tokens = await AsyncStorage.getItem('TOKEN_PAIR');
+        if (tokens) {
+          setTokenPair(JSON.parse(tokens));
+
+        }
+      } catch (error) {
+        console.error('Failed to load auth tokens', error);
+      }
+    };
+
+    getAuthTokens();
+  }, []);
+
+
+  
+  console.log("TOKEn ",token_pair);
+// AsyncStorage.removeItem("TOKEN_PAIR");
 
 
   // Login function
@@ -38,11 +63,17 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     })
       .then(response => response.json())
       .then(data => {
-        if (data.access_token) 
+        console.log(data);
+        
+        if (data.access) 
         {
             Toast.success('Login Success')
             setTokenPair(data);
-            AsyncStorage.setItem("TOKEN_PAIR", data);
+
+            AsyncStorage.setItem('TOKEN_PAIR', JSON.stringify(data));
+        }
+        else if(data.error){
+            Toast.error(data.error, "top")
         }
         else
         {
@@ -59,7 +90,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${token_pair?.access_token}`
+        Authorization: `Bearer ${token_pair?.access}`
       }
     })
       .then(response => response.json())
@@ -104,7 +135,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     fetch(`${server_url}/user/update`, {
       method: 'PUT',
       headers: {
-        Authorization: `Bearer ${token_pair.access_token}`
+        Authorization: `Bearer ${token_pair?.access}`
       },
       body: JSON.stringify(userData)
     })
@@ -122,36 +153,43 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         
       });
   };
+console.log("token_pair ", token_pair?.access);
 
-//   fetch current user
-// useEffect(()=>{
-//     if(token_pair.access_token)   
-//     {
-//         fetch(`${server_url}/user/current_user`, {
-//         headers: {
-//             Authorization: `Bearer ${token_pair.access_token}`
-//         }
-//         })
-//             .then(response => response.json())
-//             .then(data => {
-//                 setCurrentUser(data.user);
-//             });
-//     }
-//     else
-//     {
-//         setCurrentUser(null);
-//         setTokenPair({ access_token: '', refresh_token: '' });
-//     }
-// }, [token_pair]);
+    // fetch current user
+  useEffect(()=>{
+      if(token_pair?.access)   
+      {
+          fetch(`${server_url}/user/current_user`, {
+          headers: {
+              Authorization: `Bearer ${token_pair?.access}`
+          }
+          })
+              .then(response => response.json())
+              .then(data => {
+                if(data.email)
+                  {
+                  setCurrentUser(data);
+                  }
+              });
+      }
+      else
+      {
+          setCurrentUser(null);
+          setTokenPair(null);
+          AsyncStorage.removeItem("TOKEN_PAIR");
+      }
+  }, [token_pair?.access]);
 
 
+
+  console.log("current_user ", current_user);
+  
   const contextData = {
     current_user,
     login,
     logout,
     register,
     updateProfile,
-
     isSignup,
     setIsSignup
   }
@@ -166,8 +204,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 // Custom hook to use the auth context
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+  if (!context) {
+    throw Toast.error('useAuth must be used within an AuthProvider', "top");
   }
   return context;
+  
 };

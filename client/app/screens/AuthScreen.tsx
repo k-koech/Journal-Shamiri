@@ -13,7 +13,7 @@ interface RegisterParams {
 
 
 export default function AuthScreen() {
-  const { register, isSignup, setIsSignup } = useContext(AuthContext);
+  const { register,login, isSignup, setIsSignup } = useContext(AuthContext);
 
   const [email, setEmail] = useState<string>('');
   const [username, setUsername] = useState<string>('');
@@ -38,11 +38,21 @@ export default function AuthScreen() {
         Toast.error('Please enter a valid email address.', 'top');
         return;
       }
+      // Register
       register({ email, username, name, password })
     } 
     else {
-      // Handle log in      
-      console.log("Login");
+      // Login
+      if (!email.includes('@')) {
+        Toast.error('Please enter a valid email address.', 'top');
+        return;
+      }
+      else if(!password){
+        Toast.error('Password is required', 'top');
+      }
+      else{
+         login(email, password)
+      }
       
 
       }
