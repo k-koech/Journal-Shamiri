@@ -1,7 +1,8 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { User } from './types';
 import { server_url } from '../../config.json'; 
-import {AsyncStorage} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Toast } from 'toastify-react-native';
 
 
 
@@ -37,8 +38,14 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       .then(data => {
         if (data.access_token) 
         {
+            Toast.success('Login Success')
             setTokenPair(data);
             AsyncStorage.setItem("TOKEN_PAIR", data);
+        }
+        else
+        {
+            Toast.error('Login Failed', "top")
+
         }
 
     });
@@ -50,11 +57,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${token_pair.access_token}`
+        Authorization: `Bearer ${token_pair?.access_token}`
       }
     })
       .then(response => response.json())
       .then(() => {
+        Toast.success('Logout Success')
+        AsyncStorage.removeItem("TOKEN_PAIR");
         setCurrentUser(null);
       });
   };
@@ -70,7 +79,17 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     })
       .then(response => response.json())
       .then(data => {
-        setCurrentUser(data.user);
+        if(data.success){
+            Toast.success(data.success)
+        }
+        else if(data.error){
+            Toast.error(data.error, "top")
+        }
+        else{
+            Toast.error('Registration Failed', "top")
+        }
+     
+        
       });
   };
 
@@ -85,7 +104,16 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     })
       .then(response => response.json())
       .then(data => {
-        setCurrentUser(data.user);
+        if (data.success) 
+            {
+                Toast.success('Profile Update Success')
+            }
+            else
+            {
+                Toast.error('Login Failed', "top")
+    
+            }
+        
       });
   };
 
