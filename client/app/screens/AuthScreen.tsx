@@ -1,14 +1,28 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
+import React, { useContext, useEffect, useState } from 'react';
+import { View, Text, TextInput,Platform, TouchableOpacity, Alert, ScrollView, KeyboardAvoidingView, Keyboard } from 'react-native';
 import { Toast } from 'toastify-react-native';
+import { AuthContext } from '../context/AuthContext';
+
+
+interface RegisterParams {
+  email: string;
+  username: string;
+  name: string;
+  password: string;
+}
+
 
 export default function AuthScreen() {
-  const [email, setEmail] = useState('');
-  const [username, setUsername] = useState('');
-  const [name, setName] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [isSignup, setIsSignup] = useState(true);
+  const { register, isSignup, setIsSignup } = useContext(AuthContext);
+
+  const [email, setEmail] = useState<string>('');
+  const [username, setUsername] = useState<string>('');
+  const [name, setName] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [confirmPassword, setConfirmPassword] = useState<string>('');
+
+  const [keyboard_up, setKeyboard_up] = useState<boolean>(false); // Default title size
+
 
   const handleSubmit = () => {
     if (isSignup) {
@@ -24,10 +38,7 @@ export default function AuthScreen() {
         Toast.error('Please enter a valid email address.', 'top');
         return;
       }
-      // Add more validations as needed
-      console.log('====================================');
-      console.log('Sign Up');
-      console.log('====================================');
+      register({ email, username, name, password })
     } 
     else {
       // Handle log in      
@@ -37,12 +48,32 @@ export default function AuthScreen() {
       }
   };
 
-  return (
-    <View className='flex-1 justify-center items-center p-4 '>
-      <View className="min-h-[50vh] w-[90vw] rounded-xl p-4">
-        <Text className="text-8xl mb-2 text-[#026D87]" style={{ fontFamily: 'dancing_script' }}>Journal</Text>
 
-        <Text className="text-4xl mb-4 text-[#026D87]" style={{fontFamily:"poppins"}}>{isSignup ? 'Sign Up' : 'Log In'}</Text>
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
+      setKeyboard_up(true);
+
+    });
+    const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
+      setKeyboard_up(false); 
+    });
+
+    return () => {
+      keyboardDidHideListener.remove();
+      keyboardDidShowListener.remove();
+    };
+  }, []);
+
+  return (
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      className='flex-1 '
+    >
+    <View className='flex-1 justify-center items-center p-4 bg-white '>
+      <View className="min-h-[50vh] w-[90vw] rounded-xl p-4">
+        <Text className={`${keyboard_up? "text-5xl": "text-7xl"} mb-2 text-[#026D87]`} style={{ fontFamily: 'dancing_script' }}>Journal</Text>
+
+        <Text className={`${keyboard_up? "text-3xl": "text-4xl"}  mb-4 text-[#026D87]`} style={{fontFamily:"poppins"}}>{isSignup ? 'Sign Up' : 'Log In'}</Text>
 
         {isSignup && (
           <>
@@ -94,5 +125,7 @@ export default function AuthScreen() {
         </View>
       </View>
     </View>
+
+  </KeyboardAvoidingView>
   );
 }

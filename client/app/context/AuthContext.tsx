@@ -6,23 +6,25 @@ import { Toast } from 'toastify-react-native';
 
 
 
-// Define the context type
 interface AuthContextType {
+  isSignup: boolean;
   current_user: User | null;
+  token_pair: { access_token: string, refresh_token: string };
   login: (email: string, password: string) => void;
   logout: () => void;
   register: (userData: Partial<User>) => void;
   updateProfile: (userData: Partial<User>) => void;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
 {
   const [current_user, setCurrentUser] = useState<User | null>(null);
   const [token_pair, setTokenPair] = useState( AsyncStorage.getItem("TOKEN_PAIR")? AsyncStorage.getItem("TOKEN_PAIR"): { access_token: '', refresh_token: '' });
+
+  const [isSignup, setIsSignup] = useState<boolean>(true);
 
 
   // Login function
@@ -68,7 +70,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       });
   };
 
-  // Register function
+
+  // Register user function
   const register = (userData: Partial<User>) => {
     fetch(`${server_url}/user/register`, {
       method: 'POST',
@@ -81,6 +84,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       .then(data => {
         if(data.success){
             Toast.success(data.success)
+
+            setIsSignup(false);
+
         }
         else if(data.error){
             Toast.error(data.error, "top")
@@ -144,7 +150,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     login,
     logout,
     register,
-    updateProfile
+    updateProfile,
+
+    isSignup,
+    setIsSignup
   }
 
   return (
