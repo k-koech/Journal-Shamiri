@@ -36,11 +36,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         const tokens = await AsyncStorage.getItem('TOKEN_PAIR');
         if (tokens) {
           setTokenPair(JSON.parse(tokens));
-          console.log("UseEffect");
           
         }
       } catch (error) {
-        console.error('Failed to load auth tokens', error);
       }
     };
 
@@ -49,10 +47,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
 
   
-  console.log("TOKEn ",token_pair);
-// AsyncStorage.removeItem("TOKEN_PAIR");
-
-
   // Login function
   const login = (email: string, password: string) => {
     fetch(`${server_url}/token/`, {
@@ -64,8 +58,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     })
       .then(response => response.json())
       .then(data => {
-        console.log(data);
-        
+       
         if (data.access) 
         {
             Toast.success('Login Success')
@@ -87,9 +80,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   // Logout function
   const logout = () => {
-    console.log('====================================');
-    console.log("Logout called");
-    console.log('====================================');
     // fetch(`${server_url}/user/logout`, {
     //   method: 'POST',
     //   headers: {
@@ -183,8 +173,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   }, [token_pair?.access, onChange]);
 
 
-
-  console.log("current_user ", current_user);
   
   const contextData = {
     current_user,
