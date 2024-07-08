@@ -14,11 +14,11 @@ from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
 def signup(request):
     if request.method == 'POST':
         username = request.data.get('username')
-        phone_number = request.data.get('phone_number')
+        name = request.data.get('name')
         picture = request.data.get('picture')
         email = request.data.get('email')
         password = make_password( request.data.get('password') )
-        print(username, phone_number, picture, email, password)
+        print(username, name, picture, email, password)
 
         email_exists = User.objects.filter(email=email).exists()
         username_exists = User.objects.filter(username=username).exists()
@@ -34,7 +34,7 @@ def signup(request):
         
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
-            user = User.objects.create(username=username,phone_number=phone_number,picture=picture,  email=email, password=password)
+            user = User.objects.create(username=username,name=name,picture=picture,  email=email, password=password)
             user.save()
             return JsonResponse({"success":"User Created Successfully"}, status=status.HTTP_201_CREATED)
         else:

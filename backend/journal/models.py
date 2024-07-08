@@ -38,8 +38,8 @@ class UserManager(BaseUserManager):
 
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(db_index=True, unique=True,  null=True, blank=True)
-    username = models.CharField(max_length=50, null=True) 
-    phone_number = models.CharField(max_length=13, unique=True, null=True)
+    username = models.CharField(max_length=30, null=True) 
+    name = models.CharField(max_length=50, unique=True, null=True)
     date_joined = models.DateTimeField(verbose_name='date joined', auto_now_add=True)
     last_login = models.DateTimeField(verbose_name='last login', auto_now=True)
     picture =  models.FileField(upload_to='profile/%Y:%m:%d', null=True)  
