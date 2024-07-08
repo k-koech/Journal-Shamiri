@@ -118,8 +118,7 @@ const JournalDetailScreen: React.FC = () => {
                     onBlur={handleBlur('category')}
                     value={values.category}
                   />
-                  <TouchableOpacity
-                    onPress={handleSubmit}
+                  <TouchableOpacity onPress={()=>handleSubmit}
                     className="bg-green-500 p-3 rounded-lg mb-2"
                   >
                     <Text className="text-white text-center text-lg">Update</Text>
