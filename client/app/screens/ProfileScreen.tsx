@@ -13,6 +13,7 @@ const ProfileScreen: React.FC = () => {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
 
+  const [error, setError] = useState<string | null>(null);
   const {logout, current_user, updateProfile} = useContext(AuthContext);
   const [imageUri, setImageUri] = useState<any | undefined>(undefined);
 
@@ -41,12 +42,12 @@ const ProfileScreen: React.FC = () => {
     console.log("Broos");
     
     if (!values.fullName || !values.username ) {
-      Toast.error('All fields are required.', 'top');
+      setError('All fields are required.');
       return;
     }
 
     let formData = new FormData();
-    formData.append('fullName', values.fullName);
+    formData.append('name', values.fullName);
     formData.append('username', values.username);
     formData.append('password', values.password);
     if (imageUri) {
@@ -60,7 +61,8 @@ const ProfileScreen: React.FC = () => {
     console.log(values.fullName, values.username, values.password);
     console.log('====================================');
     updateProfile(formData);
-    
+
+    setError(null)
     setModalVisible(false);
   };
 
@@ -75,19 +77,19 @@ const ProfileScreen: React.FC = () => {
         <Ionicons name="chevron-back" size={28} className='text-gray-800' cxolor="gray" />
       </TouchableOpacity>
       
-      {/* Profile Header */}
+      {/* Profile Header Section*/}
         <View className='mt-12'>
           <View className="flex items-center mt-12 mb-8">
             <View className="border border-gray-200 flex items-center justify-center ml-4 h-20 w-20 bg-white rounded-xl">
               {
                  current_user?.picture?
-                  <Image source={{uri: server_url + current_user?.picture}} style={{width: 50, height: 50}} />
+                  <Image className='rounded-lg' source={{uri: server_url + current_user?.picture}} style={{width: 70, height: 70}} />
                   :
                   <Text className='text-xl font-bold mt-2 UPPERCASE' >{current_user?.name[0]} </Text>
               }
 
             </View>
-            <Text className="text-2xl ml-4 mt-4" style={{fontFamily:'poppins'}}>{current_user?.fullName}</Text>
+            <Text className="text-2xl ml-4 mt-4" style={{fontFamily:'poppins'}}>{current_user?.username}</Text>
           </View>
 
           <View className="flex flex-row item-center justify-between pb-6 pt-6 border-b border-gray-300">
@@ -129,7 +131,13 @@ const ProfileScreen: React.FC = () => {
           style={styles.modalContainer}
         >
           <View className="w-[80vw] bg-white p-6 rounded-lg shadow-lg">
-            <Text className="text-center text-xl mb-4" style={{fontFamily:"poppins"}}>Update Profile</Text>
+            <Text className="text-center text-xl mb-4" style={{fontFamily:"poppins", fontWeight:"bold"}}>Update Profile</Text>
+
+            {
+              error && (
+                <Text className="text-red-600 my-4 text-center">{error}</Text>
+              )
+            }
             <Formik
               initialValues={{picture:current_user?.picture, fullName: current_user?.name, username: current_user?.username, password: '' }}
               onSubmit={handleUpdate}

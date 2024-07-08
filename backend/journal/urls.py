@@ -4,7 +4,8 @@ from django.urls import path
 # from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework_simplejwt.views import (TokenObtainPairView,TokenRefreshView, TokenVerifyView, TokenBlacklistView)
 from rest_framework_simplejwt.views import TokenBlacklistView
-
+from django.conf.urls.static import static
+from django.conf import settings
 
 urlpatterns = [
     path("user/register", signup, name="signup"),
@@ -27,4 +28,4 @@ urlpatterns = [
     path('journal-entry/<int:entry_id>/delete', delete_journal_entry, name='delete_journal_entry'),
     path('journals/summary', summary_between_dates, name='summary_between_dates'),
 
-]
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

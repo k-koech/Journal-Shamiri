@@ -28,7 +28,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [current_user, setCurrentUser] = useState<User | null>(null);
   const [token_pair, setTokenPair] = useState<TokenPair | null>(null);
   const [isSignup, setIsSignup] = useState<boolean>(false);
-
+  const [onChange, setOnchange] = useState<boolean>(false);
   
   useEffect(() => {
     const getAuthTokens = async () => {
@@ -144,13 +144,14 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       headers: {
         Authorization: `Bearer ${token_pair?.access}`
       },
-      body: userData
+      body: userData as any
     })
       .then(response => response.json())
       .then(data => {
         if (data.success) 
             {
                 Toast.success('Profile Update Success')
+                setOnchange(!onChange);
             }
             else
             {
@@ -179,7 +180,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
               });
       }
     
-  }, [token_pair?.access]);
+  }, [token_pair?.access, onChange]);
 
 
 

@@ -3,6 +3,9 @@ import React,{useContext, useState} from 'react'
 import { AntDesign, Ionicons } from '@expo/vector-icons'
 import { LinearGradient } from 'expo-linear-gradient';
 import { AuthContext } from '../context/AuthContext';
+import { server_url } from '../../config.json';
+
+
 
 export default function HomeScreen({ navigation }: { navigation: any })
  {
@@ -16,6 +19,7 @@ export default function HomeScreen({ navigation }: { navigation: any })
     setClickedCategory(category)
   }
 
+  
   return ( 
     <SafeAreaView className="flex-1">   
     <StatusBar translucent backgroundColor="transparent"/>
@@ -30,19 +34,18 @@ export default function HomeScreen({ navigation }: { navigation: any })
             <Text className="text-7xl mb-2 text-[#026D87]" style={{fontFamily: 'dancing_script'}}>Journal</Text>
           </View>
         </View>
+        
         <View className='flex justify-center items-center'>
           <TouchableOpacity onPress={() => navigation.navigate('Profile')} className='bg-white p-2 rounded-lg'>
-          {
+             {
                  current_user?.picture?
-                  <Image source={{uri: server_url + current_user?.picture}} style={{width: 50, height: 50}} />
+                  <Image source={{uri: server_url + current_user?.picture}} className='rounded-full' style={{width: 50, height: 50}} />
                   :
                   <View className='flex items-center'>
                   <Ionicons name="person" size={24} color="#009FC6" />
-                  <Text className='text-xs  font-bold text-center uppercase' >{current_user?.username}</Text>
                   </View>
-    
               }
-
+                  <Text className='text-xs  font-bold text-center uppercase' >{current_user?.username}</Text>
           </TouchableOpacity>
         </View>
       </View>
