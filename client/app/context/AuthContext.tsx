@@ -144,7 +144,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       headers: {
         Authorization: `Bearer ${token_pair?.access}`
       },
-      body: JSON.stringify(userData)
+      body: userData
     })
       .then(response => response.json())
       .then(data => {
@@ -154,7 +154,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             }
             else
             {
-                Toast.error('Login Failed', "top")
+                Toast.error('Failed to update profile!', "top")
     
             }
         

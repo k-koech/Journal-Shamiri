@@ -2,19 +2,65 @@ import React, { useContext, useState } from 'react';
 import { View, Text, Image, TouchableOpacity, TextInput, Button, Modal, StyleSheet, Platform, KeyboardAvoidingView, Alert } from 'react-native';
 import { Formik } from 'formik';
 import { useNavigation } from '@react-navigation/native';
-import { Ionicons } from '@expo/vector-icons';
+import { AntDesign, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { AuthContext } from '../context/AuthContext';
+import * as ImagePicker from 'expo-image-picker';
+
 import { server_url } from '../../config.json';
+import { Toast } from 'toastify-react-native';
 
 const ProfileScreen: React.FC = () => {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
 
-  const {logout, current_user} = useContext(AuthContext);
+  const {logout, current_user, updateProfile} = useContext(AuthContext);
+  const [imageUri, setImageUri] = useState<any | undefined>(undefined);
+
+  const pickImage = async () => {
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (permissionResult.granted === false) {
+      Toast.error("Permission to access media library is required!", 'top');
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 4],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setImageUri(result.assets[0]);
+    }
+  };
 
 
   const handleUpdate = (values: any) => {
+    console.log("Broos");
+    
+    if (!values.fullName || !values.username ) {
+      Toast.error('All fields are required.', 'top');
+      return;
+    }
 
+    let formData = new FormData();
+    formData.append('fullName', values.fullName);
+    formData.append('username', values.username);
+    formData.append('password', values.password);
+    if (imageUri) {
+      formData.append('picture', {
+        uri: imageUri.uri,
+        name: 'profile.jpg',
+        type: 'image/jpg',
+      } as any);
+    }
+    console.log('====================================');
+    console.log(values.fullName, values.username, values.password);
+    console.log('====================================');
+    updateProfile(formData);
+    
     setModalVisible(false);
   };
 
@@ -67,10 +113,7 @@ const ProfileScreen: React.FC = () => {
       </TouchableOpacity>
       
       {/* Update Button */}
-      <TouchableOpacity
-        onPress={() => setModalVisible(true)}
-        className="bg-[#009FC6] p-2 mt-8 rounded-lg"
-      >
+      <TouchableOpacity onPress={() => setModalVisible(true)} className="bg-[#009FC6] p-2 mt-8 rounded-lg">
         <Text className="text-white text-center text-lg" style={{fontFamily:"roboto"}}>Update Profile</Text>
       </TouchableOpacity>
 
@@ -88,48 +131,77 @@ const ProfileScreen: React.FC = () => {
           <View className="w-[80vw] bg-white p-6 rounded-lg shadow-lg">
             <Text className="text-center text-xl mb-4" style={{fontFamily:"poppins"}}>Update Profile</Text>
             <Formik
-              initialValues={{ fullName: current_user?.name, username: current_user?.username, password: '' }}
+              initialValues={{picture:current_user?.picture, fullName: current_user?.name, username: current_user?.username, password: '' }}
               onSubmit={handleUpdate}
             >
               {({ handleChange, handleBlur, handleSubmit, values }) => (
-                <>
-                  <TextInput
-                    className="border border-gray-300 p-2 mb-4 rounded-lg"
-                    placeholder="Full Name"
-                    onChangeText={handleChange('fullName')}
-                    onBlur={handleBlur('fullName')}
-                    value={values.fullName}
-                  />
-                  <TextInput
-                    className="border border-gray-300 p-2 mb-4 rounded-lg"
-                    placeholder="Username"
-                    onChangeText={handleChange('username')}
-                    onBlur={handleBlur('username')}
-                    value={values.username}
-                  />
-        
-                  <TextInput
-                    className="border border-gray-300 p-2 mb-4 rounded-lg"
-                    placeholder="Password"
-                    onChangeText={handleChange('password')}
-                    onBlur={handleBlur('password')}
-                    value={values.password}
-                    secureTextEntry
-                  />
+                <View>
+                <Text>Profile Image</Text>
 
-                 <TouchableOpacity
-                    onPress={() => handleSubmit()}
-                    className="mt-4 p-2 bg-[#009FC6] rounded-lg"
-                  >
-                    <Text className="text-center text-white">Update</Text>
-                  </TouchableOpacity>
+                 <View className="flex flex-row items-center justify-center relative">
+                  <View>
+                    <View className='absolute top-[-1px] right-0'>
+                       <TouchableOpacity onPress={()=> setImageUri("")}>
+                          <AntDesign name="close" size={20} color="gray" />
+                       </TouchableOpacity>
+                    </View>
+                    {imageUri ?
+                      <Image className='rounded-full' style={{ width: 100, height: 100, marginTop: 10, }}  source={{ uri: imageUri?.uri || server_url+current_user?.profile}} />
+                      :
+                      <View className="border aspect-auto border-gray-200 flex items-center justify-center ml-4 h-20 w-20 bg-white rounded-xl">
+                          <Text className='text-xl font-bold mt-2 UPPERCASE' >{current_user?.name[0]} </Text>    
+                      </View>
+                  }
+                  </View>
+                </View>
+                <TouchableOpacity onPress={pickImage} className="mb-4 p-2 flex items-center">
+                  <MaterialCommunityIcons name="file-image-plus" size={24} color="#009FC6" />
+                </TouchableOpacity>
+
+                <Text>Full Name</Text>
+                <TextInput
+                  className="border border-gray-300 p-2 mb-4 rounded-lg"
+                  placeholder="Full Name"
+                  onChangeText={handleChange('fullName')}
+                  onBlur={handleBlur('fullName')}
+                  value={values.fullName}
+                />
+      
+                <Text>Username</Text>
+                <TextInput
+                  className="border border-gray-300 p-2 mb-4 rounded-lg"
+                  placeholder="Username"
+                  onChangeText={handleChange('username')}
+                  onBlur={handleBlur('username')}
+                  value={values.username}
+                />
+      
+                <Text>Password</Text>
+                <TextInput
+                  className="border border-gray-300 p-2 mb-4 rounded-lg"
+                  placeholder="Password"
+                  onChangeText={handleChange('password')}
+                  onBlur={handleBlur('password')}
+                  value={values.password}
+                  secureTextEntry
+                />
+      
+
+                <View className="flex flex-row justify-between">                  
                   <TouchableOpacity
                     onPress={() => setModalVisible(false)}
                     className="mt-4 p-2 bg-gray-300 rounded-lg"
                   >
                     <Text className="text-center text-gray-800">Cancel</Text>
                   </TouchableOpacity>
-                </>
+                  <TouchableOpacity
+                    onPress={()=> handleSubmit() }
+                    className="mt-4 py-2 px-4 bg-[#009FC6] rounded-lg"
+                  >
+                    <Text className="text-center text-white">Update</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
               )}
             </Formik>
           </View>
