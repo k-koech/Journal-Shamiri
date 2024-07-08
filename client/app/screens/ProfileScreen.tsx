@@ -38,9 +38,7 @@ const ProfileScreen: React.FC = () => {
   };
 
 
-  const handleUpdate = (values: any) => {
-    console.log("Broos");
-    
+  const handleUpdate = (values: any) => {   
     if (!values.fullName || !values.username ) {
       setError('All fields are required.');
       return;
@@ -57,9 +55,8 @@ const ProfileScreen: React.FC = () => {
         type: 'image/jpg',
       } as any);
     }
-    console.log('====================================');
-    console.log(values.fullName, values.username, values.password);
-    console.log('====================================');
+
+    
     updateProfile(formData);
 
     setError(null)
@@ -153,8 +150,8 @@ const ProfileScreen: React.FC = () => {
                           <AntDesign name="close" size={20} color="gray" />
                        </TouchableOpacity>
                     </View>
-                    {imageUri ?
-                      <Image className='rounded-full' style={{ width: 100, height: 100, marginTop: 10, }}  source={{ uri: imageUri?.uri || server_url+current_user?.profile}} />
+                    {imageUri || current_user?.picture ?
+                      <Image className='rounded-full' style={{ width: 100, height: 100, marginTop: 10, }}  source={{ uri: imageUri?.uri || server_url+current_user?.picture}} />
                       :
                       <View className="border aspect-auto border-gray-200 flex items-center justify-center ml-4 h-20 w-20 bg-white rounded-xl">
                           <Text className='text-xl font-bold mt-2 UPPERCASE' >{current_user?.name[0]} </Text>    
@@ -162,6 +159,7 @@ const ProfileScreen: React.FC = () => {
                   }
                   </View>
                 </View>
+
                 <TouchableOpacity onPress={pickImage} className="mb-4 p-2 flex items-center">
                   <MaterialCommunityIcons name="file-image-plus" size={24} color="#009FC6" />
                 </TouchableOpacity>

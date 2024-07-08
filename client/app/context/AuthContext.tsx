@@ -193,7 +193,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     register,
     updateProfile,
     isSignup,
-    setIsSignup
+    setIsSignup,
+
+    onChange,
+    setOnchange
   }
 
   return (

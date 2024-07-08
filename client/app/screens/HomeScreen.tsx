@@ -1,4 +1,4 @@
-import { View,Button, Text,StatusBar, ScrollView, SafeAreaView, TextInput, TouchableOpacity, Touchable, Image } from 'react-native'
+import { View,Button, Text,StatusBar, ScrollView, SafeAreaView, TextInput, TouchableOpacity, Touchable, Image, RefreshControl } from 'react-native'
 import React,{useContext, useState} from 'react'
 import { AntDesign, Ionicons } from '@expo/vector-icons'
 import { LinearGradient } from 'expo-linear-gradient';
@@ -10,10 +10,15 @@ import { server_url } from '../../config.json';
 export default function HomeScreen({ navigation }: { navigation: any })
  {
   const { current_user} = useContext(AuthContext);
-
   const [clickedCategory, setClickedCategory] = useState('All')
-
   const categories = ["All", 'Personal', 'Work', 'Travel', 'Other']
+
+  const [refreshing, setRefreshing] = useState(false);
+  const {onChange, setOnchange} = useContext(AuthContext)
+
+  const onRefresh = async () => {
+     setOnchange(!onChange)
+  };
 
   const handleCategoryPress = (category: string) => {
     setClickedCategory(category)
@@ -25,7 +30,7 @@ export default function HomeScreen({ navigation }: { navigation: any })
     <StatusBar translucent backgroundColor="transparent"/>
 
   <LinearGradient colors={['#E0F9FF', '#fff', "#F1FCFF", "#fff"]} style={{flex: 1}}>
-  <ScrollView className=" flex-1 p-4 bg-gradient-to-r from-cyan-500 to-blue-500 mb-24 pb-4 ">
+  <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh}  /> } showsVerticalScrollIndicator={false} className=" flex-1 p-4 bg-gradient-to-r from-cyan-500 to-blue-500 mb-24 pb-4 ">
       <View className='flex flex-row justify-between items-center'>
         <View className='mt-8 w-[70vw]'>
           <Text className="text-2xl mb-2 font-thin capitalize" style={{fontFamily:"poppins"}}>Hi {current_user?.name}</Text>
