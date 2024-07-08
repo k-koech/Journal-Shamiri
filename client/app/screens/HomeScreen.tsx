@@ -1,10 +1,13 @@
 import { View,Button, Text,StatusBar, ScrollView, SafeAreaView, TextInput, TouchableOpacity, Touchable } from 'react-native'
-import React,{useState} from 'react'
+import React,{useContext, useState} from 'react'
 import { AntDesign, Ionicons } from '@expo/vector-icons'
 import { LinearGradient } from 'expo-linear-gradient';
+import { AuthContext } from '../context/AuthContext';
 
 export default function HomeScreen({ navigation }: { navigation: any })
  {
+  const { current_user} = useContext(AuthContext);
+
   const [clickedCategory, setClickedCategory] = useState('All')
 
   const categories = ["All", 'Personal', 'Work', 'Travel', 'Other']
@@ -21,7 +24,7 @@ export default function HomeScreen({ navigation }: { navigation: any })
   <ScrollView className=" flex-1 p-4 bg-gradient-to-r from-cyan-500 to-blue-500 mb-24 pb-4 ">
       <View className='flex flex-row justify-between items-center'>
         <View className='mt-8'>
-          <Text className="text-2xl mb-2 font-thin" style={{fontFamily:"poppins"}}>Hi Kelvin</Text>
+          <Text className="text-2xl mb-2 font-thin capitalize" style={{fontFamily:"poppins"}}>Hi {current_user?.name}</Text>
           <View>
             <Text className="text-2xl mb-2">Welcome to </Text>        
             <Text className="text-8xl mb-2 text-[#026D87]" style={{fontFamily: 'dancing_script'}}>Journal</Text>
@@ -45,18 +48,7 @@ export default function HomeScreen({ navigation }: { navigation: any })
         </TouchableOpacity>
       </View>
 
-      {/* <View className='flex flex-row items-center justify-between border border-gray-300 rounded-lg mt-4'>
-        <TextInput
-          className='w-[82%] placeholder-gray-500 p-2 '
-          placeholder='Search Journal'
-        />
-        <TouchableOpacity
-          onPress={() => navigation.navigate('Journal')}
-          className='w-[13%] xbg-blue-500 p-2 rounded-lg justify-center items-center'
-        >
-          <Ionicons name="search" size={24} color="#009FC6" />
-        </TouchableOpacity>
-      </View> */}
+    
  
       <Text className='text-2xl mt-8' style={{fontFamily: 'poppins'}}>Categories</Text>
       <View className='flex flex-row justify- gap-4 flex-wrap  mt-2'>

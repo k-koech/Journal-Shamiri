@@ -50,7 +50,7 @@ function App() {
     <View className="flex-1 bg-white">
       <ToastManager />
         <Stack.Navigator>
-          {current_user ? (
+          {current_user?.email ? (
             <>
               <Stack.Screen name="tabs" component={TabNavigations}   options={{headerShown: false}} />
               <Stack.Screen name="Journal" component={JournalScreen} options={{headerShown: false }}/> 

@@ -1,19 +1,16 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { View, Text, Image, TouchableOpacity, TextInput, Button, Modal, StyleSheet, Platform, KeyboardAvoidingView, Alert } from 'react-native';
 import { Formik } from 'formik';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
+import { AuthContext } from '../context/AuthContext';
 
 
 const ProfileScreen: React.FC = () => {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
 
-  const user = {
-    username: 'Kelvin',
-    email: 'kelvin@example.com',
-    fullName: 'Kelvin Kipchumba'
-  };
+  const {logout, current_user} = useContext(AuthContext);
 
 
   const handleUpdate = (values: any) => {
@@ -38,27 +35,27 @@ const ProfileScreen: React.FC = () => {
             <View className="border border-gray-200 flex items-center justify-center ml-4 h-20 w-20 bg-white rounded-xl">
               <Text className='text-xl font-roboto mt-2'>KK</Text>
             </View>
-            <Text className="text-2xl ml-4 mt-4" style={{fontFamily:'poppins'}}>{user.fullName}</Text>
+            <Text className="text-2xl ml-4 mt-4" style={{fontFamily:'poppins'}}>{current_user?.fullName}</Text>
           </View>
 
           <View className="flex flex-row item-center justify-between pb-6 pt-6 border-b border-gray-300">
             <Text className=" w-[30vw]" style={{fontFamily: 'roboto', fontWeight:"bold"}}>Name</Text>
-            <Text className="flex-1 text-gray-600"  style={{fontFamily: 'roboto'}}>{user.fullName}</Text>
+            <Text className="flex-1 text-gray-600"  style={{fontFamily: 'roboto'}}>{current_user?.name}</Text>
           </View>
 
           <View className="flex flex-row item-center justify-between pb-6 pt-6 border-b border-gray-300">
             <Text className=" w-[30vw]" style={{fontFamily: 'roboto', fontWeight:"bold"}}>Username</Text>
-            <Text className="flex-1 text-gray-600"  style={{fontFamily: 'roboto'}}>{user.username}</Text>
+            <Text className="flex-1 text-gray-600"  style={{fontFamily: 'roboto'}}>{current_user?.username}</Text>
           </View>
           <View className="flex flex-row item-center justify-between pb-6 pt-6 border-b border-gray-300">
             <Text className=" w-[30vw]" style={{fontFamily: 'roboto', fontWeight:"bold"}}>Email</Text>
-            <Text className="flex-1 text-gray-600"  style={{fontFamily: 'roboto'}}>{user.email}</Text>
+            <Text className="flex-1 text-gray-600"  style={{fontFamily: 'roboto'}}>{current_user?.email}</Text>
           </View>
         </View>
       </View>
 
       <TouchableOpacity className="p-2 mt-8"
-        onPress={() => console.log("Logout")}
+        onPress={() => logout()}
       >
         <Text className="text-red-600 text-center text-lg" style={{fontFamily:"roboto"}}>Logout</Text>
       </TouchableOpacity>
@@ -85,7 +82,7 @@ const ProfileScreen: React.FC = () => {
           <View className="w-[80vw] bg-white p-6 rounded-lg shadow-lg">
             <Text className="text-center text-xl mb-4" style={{fontFamily:"poppins"}}>Update Profile</Text>
             <Formik
-              initialValues={{ fullName: user.fullName, username: user.username, password: '' }}
+              initialValues={{ fullName: current_user?.name, username: current_user?.username, password: '' }}
               onSubmit={handleUpdate}
             >
               {({ handleChange, handleBlur, handleSubmit, values }) => (

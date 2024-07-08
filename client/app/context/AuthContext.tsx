@@ -36,7 +36,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         const tokens = await AsyncStorage.getItem('TOKEN_PAIR');
         if (tokens) {
           setTokenPair(JSON.parse(tokens));
-
+          console.log("UseEffect");
+          
         }
       } catch (error) {
         console.error('Failed to load auth tokens', error);
@@ -86,19 +87,25 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   // Logout function
   const logout = () => {
-    fetch(`${server_url}/user/logout`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token_pair?.access}`
-      }
-    })
-      .then(response => response.json())
-      .then(() => {
-        Toast.success('Logout Success')
-        AsyncStorage.removeItem("TOKEN_PAIR");
-        setCurrentUser(null);
-      });
+    console.log('====================================');
+    console.log("Logout called");
+    console.log('====================================');
+    // fetch(`${server_url}/user/logout`, {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //     Authorization: `Bearer ${token_pair?.access}`
+    //   }
+    // })
+    //   .then(response => response.json())
+    //   .then(() => {
+    //     Toast.success('Logout Success')
+    //     AsyncStorage.removeItem("TOKEN_PAIR");
+    //     setCurrentUser(null);
+    //   });
+    Toast.success('Logout Success')
+    AsyncStorage.removeItem("TOKEN_PAIR");
+    setCurrentUser(null);
   };
 
 
@@ -153,7 +160,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         
       });
   };
-console.log("token_pair ", token_pair?.access);
 
     // fetch current user
   useEffect(()=>{
@@ -172,12 +178,7 @@ console.log("token_pair ", token_pair?.access);
                   }
               });
       }
-      else
-      {
-          setCurrentUser(null);
-          setTokenPair(null);
-          AsyncStorage.removeItem("TOKEN_PAIR");
-      }
+    
   }, [token_pair?.access]);
 
 
