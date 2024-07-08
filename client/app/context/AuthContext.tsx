@@ -118,25 +118,25 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
 //   fetch current user
-useEffect(()=>{
-    if(token_pair.access_token)   
-    {
-        fetch(`${server_url}/user/current_user`, {
-        headers: {
-            Authorization: `Bearer ${token_pair.access_token}`
-        }
-        })
-            .then(response => response.json())
-            .then(data => {
-                setCurrentUser(data.user);
-            });
-    }
-    else
-    {
-        setCurrentUser(null);
-        setTokenPair({ access_token: '', refresh_token: '' });
-    }
-}, [token_pair]);
+// useEffect(()=>{
+//     if(token_pair.access_token)   
+//     {
+//         fetch(`${server_url}/user/current_user`, {
+//         headers: {
+//             Authorization: `Bearer ${token_pair.access_token}`
+//         }
+//         })
+//             .then(response => response.json())
+//             .then(data => {
+//                 setCurrentUser(data.user);
+//             });
+//     }
+//     else
+//     {
+//         setCurrentUser(null);
+//         setTokenPair({ access_token: '', refresh_token: '' });
+//     }
+// }, [token_pair]);
 
 
   const contextData = {
