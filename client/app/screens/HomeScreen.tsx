@@ -1,4 +1,4 @@
-import { View,Button, Text,StatusBar, ScrollView, SafeAreaView, TextInput, TouchableOpacity, Touchable } from 'react-native'
+import { View,Button, Text,StatusBar, ScrollView, SafeAreaView, TextInput, TouchableOpacity, Touchable, Image } from 'react-native'
 import React,{useContext, useState} from 'react'
 import { AntDesign, Ionicons } from '@expo/vector-icons'
 import { LinearGradient } from 'expo-linear-gradient';
@@ -23,17 +23,26 @@ export default function HomeScreen({ navigation }: { navigation: any })
   <LinearGradient colors={['#E0F9FF', '#fff', "#F1FCFF", "#fff"]} style={{flex: 1}}>
   <ScrollView className=" flex-1 p-4 bg-gradient-to-r from-cyan-500 to-blue-500 mb-24 pb-4 ">
       <View className='flex flex-row justify-between items-center'>
-        <View className='mt-8'>
+        <View className='mt-8 w-[70vw]'>
           <Text className="text-2xl mb-2 font-thin capitalize" style={{fontFamily:"poppins"}}>Hi {current_user?.name}</Text>
           <View>
             <Text className="text-2xl mb-2">Welcome to </Text>        
-            <Text className="text-8xl mb-2 text-[#026D87]" style={{fontFamily: 'dancing_script'}}>Journal</Text>
+            <Text className="text-7xl mb-2 text-[#026D87]" style={{fontFamily: 'dancing_script'}}>Journal</Text>
           </View>
         </View>
         <View className='flex justify-center items-center'>
           <TouchableOpacity onPress={() => navigation.navigate('Profile')} className='bg-white p-2 rounded-lg'>
-            <Ionicons name="person" size={24} color="#009FC6" />
-            <Text className='text-blue-500 text-center text-xs'>KK</Text>
+          {
+                 current_user?.picture?
+                  <Image source={{uri: server_url + current_user?.picture}} style={{width: 50, height: 50}} />
+                  :
+                  <View className='flex items-center'>
+                  <Ionicons name="person" size={24} color="#009FC6" />
+                  <Text className='text-xs  font-bold text-center uppercase' >{current_user?.username}</Text>
+                  </View>
+    
+              }
+
           </TouchableOpacity>
         </View>
       </View>

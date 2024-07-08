@@ -4,7 +4,7 @@ import { Formik } from 'formik';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { AuthContext } from '../context/AuthContext';
-
+import { server_url } from '../../config.json';
 
 const ProfileScreen: React.FC = () => {
   const navigation = useNavigation();
@@ -33,7 +33,13 @@ const ProfileScreen: React.FC = () => {
         <View className='mt-12'>
           <View className="flex items-center mt-12 mb-8">
             <View className="border border-gray-200 flex items-center justify-center ml-4 h-20 w-20 bg-white rounded-xl">
-              <Text className='text-xl font-roboto mt-2'>KK</Text>
+              {
+                 current_user?.picture?
+                  <Image source={{uri: server_url + current_user?.picture}} style={{width: 50, height: 50}} />
+                  :
+                  <Text className='text-xl font-bold mt-2 UPPERCASE' >{current_user?.name[0]} </Text>
+              }
+
             </View>
             <Text className="text-2xl ml-4 mt-4" style={{fontFamily:'poppins'}}>{current_user?.fullName}</Text>
           </View>
