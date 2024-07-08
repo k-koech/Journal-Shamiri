@@ -11,6 +11,8 @@ import TabNavigations from './navigations/TabNavigations';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import Spinner from './components/Spinner';
+import ToastManager from 'toastify-react-native';
+import { View } from 'react-native';
 
 const Stack = createStackNavigator();
 
@@ -27,6 +29,8 @@ export default function index() {
   }
 
   return (
+    <View className="flex-1 bg-white">
+      <ToastManager />
     <NavigationContainer independent={true}>
     <Stack.Navigator initialRouteName="Auth">
       {/* <Stack.Screen name="Auth" component={AuthScreen}  options={{headerShown: false}} /> */}
@@ -37,5 +41,6 @@ export default function index() {
       <Stack.Screen name="Summary" component={SummaryScreen} /> 
     </Stack.Navigator>
   </NavigationContainer>
+  </View>
   )
 }
