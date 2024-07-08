@@ -13,6 +13,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import Spinner from './components/Spinner';
 import ToastManager from 'toastify-react-native';
 import { View } from 'react-native';
+import { AuthProvider } from './context/AuthContext';
 
 const Stack = createStackNavigator();
 
@@ -30,17 +31,39 @@ export default function index() {
 
   return (
     <View className="flex-1 bg-white">
-      <ToastManager />
-    <NavigationContainer independent={true}>
-    <Stack.Navigator initialRouteName="Auth">
-      {/* <Stack.Screen name="Auth" component={AuthScreen}  options={{headerShown: false}} /> */}
-      <Stack.Screen name="tabs" component={TabNavigations}   options={{headerShown: false}} />
-      <Stack.Screen name="Journal" component={JournalScreen} options={{headerShown: false }}/> 
-      <Stack.Screen name="JournalDetail" component={JournalDetailScreen} options={{headerShown: false}} />
-      
-      <Stack.Screen name="Summary" component={SummaryScreen} /> 
-    </Stack.Navigator>
-  </NavigationContainer>
+    <NavigationContainer independent={true}>      
+      <AuthProvider>
+              <App />
+      </AuthProvider>
+    </NavigationContainer>
   </View>
   )
+}
+
+
+function App() {
+
+
+ const current_user = null;
+
+
+  return (
+    <View className="flex-1 bg-white">
+      <ToastManager />
+        <Stack.Navigator>
+          {current_user ? (
+            <>
+              <Stack.Screen name="tabs" component={TabNavigations}   options={{headerShown: false}} />
+              <Stack.Screen name="Journal" component={JournalScreen} options={{headerShown: false }}/> 
+              <Stack.Screen name="JournalDetail" component={JournalDetailScreen} options={{headerShown: false}} />
+              <Stack.Screen name="Summary" component={SummaryScreen} /> 
+            </>
+          ) : (
+            <>
+              <Stack.Screen name="Auth" component={AuthScreen}  options={{headerShown: false}} />
+            </>
+          )}
+        </Stack.Navigator>
+    </View>
+  );
 }
