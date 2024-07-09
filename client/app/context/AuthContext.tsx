@@ -29,7 +29,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [token_pair, setTokenPair] = useState<TokenPair | null>(null);
   const [isSignup, setIsSignup] = useState<boolean>(false);
   const [onChange, setOnchange] = useState<boolean>(false);
-  
+
+  const [onUpdateSuccess, setOnUpdateSuccess] = useState<boolean>(false);
+  const [onUpdateError, setOnUpdateError] = useState<boolean>(false);
+
   useEffect(() => {
     const getAuthTokens = async () => {
       try {
@@ -118,6 +121,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         }
         else if(data.error){
             Toast.error(data.error, "top")
+
         }
         else{
             Toast.error('Registration Failed', "top")
@@ -138,16 +142,25 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     })
       .then(response => response.json())
       .then(data => {
+        setOnchange(!onChange);
+
         if (data.success) 
             {
                 Toast.success('Profile Update Success')
-                setOnchange(!onChange);
+                setOnUpdateSuccess(true)
+                setOnUpdateError(false)
             }
-            else
-            {
-                Toast.error('Failed to update profile!', "top")
-    
-            }
+        else if(data.error){
+                Toast.error(data.error, "top")
+                setOnUpdateSuccess(false)
+                setOnUpdateError(true)
+
+           }
+        else
+        {
+            Toast.error('Failed to update profile!', "top")
+
+        }
         
       });
   };
@@ -184,7 +197,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setIsSignup,
 
     onChange,
-    setOnchange
+    setOnchange,
+    onUpdateError,
+    onUpdateSuccess
   }
 
   return (

@@ -14,7 +14,7 @@ const ProfileScreen: React.FC = () => {
   const [modalVisible, setModalVisible] = useState(false);
 
   const [error, setError] = useState<string | null>(null);
-  const {logout, current_user, updateProfile} = useContext(AuthContext);
+  const {logout, current_user, updateProfile, onUpdateSuccess, onUpdateError} = useContext(AuthContext);
   const [imageUri, setImageUri] = useState<any | undefined>(undefined);
 
   const pickImage = async () => {
@@ -44,14 +44,39 @@ const ProfileScreen: React.FC = () => {
       return;
     }
 
+    if(values.password || values.confirmPassword || values.oldPassword) 
+      {
+      if (!values.oldPassword) {
+         setError('Old password is required');
+         return;
+      }
+
+      if(!values.password) {
+        setError('New password is required');
+        return;
+      }
+  
+      if (values.password !== values.confirmPassword) {
+        setError('Passwords do not match');
+        return;
+      }
+
+      if (values.password.length < 8) {
+        setError('Password must be at least 8 characters long');
+        return;
+      }
+    }
+
+
     let formData = new FormData();
     formData.append('name', values.fullName);
     formData.append('username', values.username);
-    formData.append('password', values.password);
+    values.oldPassword && formData.append('oldPassword', values.oldPassword);
+    values.password && formData.append('password', values.password);
     if (imageUri) {
       formData.append('picture', {
         uri: imageUri.uri,
-        name: 'profile.jpg',
+        name: imageUri.fileName,
         type: 'image/jpg',
       } as any);
     }
@@ -59,8 +84,14 @@ const ProfileScreen: React.FC = () => {
     
     updateProfile(formData);
 
-    setError(null)
-    setModalVisible(false);
+    
+    if (onUpdateSuccess) {
+      setModalVisible(false);
+      setError(null);
+    } 
+    if(onUpdateError) {
+      setError("Old password doesn't match our records");
+    }
   };
 
   return (
@@ -136,7 +167,7 @@ const ProfileScreen: React.FC = () => {
               )
             }
             <Formik
-              initialValues={{picture:current_user?.picture, fullName: current_user?.name, username: current_user?.username, password: '' }}
+              initialValues={{picture:current_user?.picture, fullName: current_user?.name, username: current_user?.username, password: '', confirmPassword: '', oldPassword: ''}}
               onSubmit={handleUpdate}
             >
               {({ handleChange, handleBlur, handleSubmit, values }) => (
@@ -181,14 +212,35 @@ const ProfileScreen: React.FC = () => {
                   onBlur={handleBlur('username')}
                   value={values.username}
                 />
-      
-                <Text>Password</Text>
+                
+                <Text className='mt-4' style={{fontFamily:"poppins"}}>Change Password(Optional)</Text>
+                <Text>Old Password</Text>
                 <TextInput
                   className="border border-gray-300 p-2 mb-4 rounded-lg"
-                  placeholder="Password"
+                  placeholder="Old Password"
+                  onChangeText={handleChange('oldPassword')}
+                  onBlur={handleBlur('oldPassword')}
+                  value={values.oldPassword}
+                  secureTextEntry
+                />
+
+                <Text>New Password</Text>
+                <TextInput
+                  className="border border-gray-300 p-2 mb-4 rounded-lg"
+                  placeholder="New Password"
                   onChangeText={handleChange('password')}
                   onBlur={handleBlur('password')}
                   value={values.password}
+                  secureTextEntry
+                />
+
+                <Text>Confirm Password</Text>
+                <TextInput
+                  className="border border-gray-300 p-2 mb-4 rounded-lg"
+                  placeholder="Confirm New Password"
+                  onChangeText={handleChange('confirmPassword')}
+                  onBlur={handleBlur('confirmPassword')}
+                  value={values.confirmPassword}
                   secureTextEntry
                 />
       

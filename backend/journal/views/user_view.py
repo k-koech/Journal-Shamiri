@@ -7,7 +7,7 @@ from django.contrib.auth.hashers import make_password
 from journal.serializer import UserSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
-
+import os
 
 # Sign Up
 @api_view(['POST'])
@@ -94,11 +94,39 @@ def update_user(request):
         
     serializer = UserSerializer(user, data=request.data, partial=True)
     if serializer.is_valid():
-        serializer.save()
-        return JsonResponse({"success":"User Updated Successfully"}, status=status.HTTP_200_OK)
-    print("OPPPO",serializer.errors)
-    return JsonResponse({"error":"Error updating"}, status=status.HTTP_400_BAD_REQUEST)
+        if 'oldPassword' in request.data and 'password' in request.data:
+            old_password = request.data['oldPassword']
+            new_password = request.data['password']
+            if user.check_password(old_password):
+                user.password = make_password(new_password)
+            else:
+                return JsonResponse({"error": "Old password is incorrect"}, status=status.HTTP_400_BAD_REQUEST)
+  
+        if 'username' in request.data:
+            user.username = request.data['username']
 
+        if 'name' in request.data:
+            user.name = request.data['name']
+
+        # If a new picture is provided, remove the old one
+        if 'picture' in request.data:
+            # Update picture
+            user.picture = request.data['picture']
+            old_picture = user.picture
+            if old_picture:
+                old_image_path = old_picture.path
+            
+                if os.path.exists(old_image_path):
+                    os.remove(old_image_path)
+                    
+                    # Check if the folder is now empty and remove it if so
+                    folder_path = os.path.dirname(old_image_path)
+                    if not os.listdir(folder_path):  # Folder is empty
+                        os.rmdir(folder_path)
+        user.save()
+        return JsonResponse({"success": "User Updated Successfully"}, status=status.HTTP_200_OK)
+    
+    return JsonResponse({"error": "Error updating"}, status=status.HTTP_400_BAD_REQUEST)
 
 # Delete User
 @api_view(['DELETE'])
