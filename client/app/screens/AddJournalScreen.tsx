@@ -18,15 +18,17 @@ const AddJournalScreen: React.FC<AddJournalScreenProps> = ({ route }) =>
 
   const { createJournal, updateJournal } = useJournalContext();
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+  const journal = route.params?.journal;  
+  const [isUpdate, setIsUpdate] = useState<boolean>(!!journal);
 
-  const journal = route.params?.journal;
-  const isUpdate = !!journal;
+  // const isUpdate = !!journal;
+  
 
-  const initialValues = {
+  const [initialValues,setInitialValues ] = useState({
     title: journal?.title || '',
     content: journal?.content || '',
     category: journal?.category || 'Personal',
-  };
+  })
 
   const handleSubmit = (values: any) => {
     if (values.title.length < 4 || values.title.length>35) {
@@ -39,10 +41,16 @@ const AddJournalScreen: React.FC<AddJournalScreenProps> = ({ route }) =>
     }
 
     if (isUpdate && journal) {
-      console.log(values);
+
       const id = parseInt(journal.id);
       updateJournal(id , { ...values });
-    } else {
+      const initialValues = {
+        title: '',
+        content:  '',
+        category:  'Personal',
+      };
+    } 
+    else {
       createJournal(values);
     }
 

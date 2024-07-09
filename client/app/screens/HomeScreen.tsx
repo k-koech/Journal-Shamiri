@@ -51,7 +51,7 @@ export default function HomeScreen({ navigation }: { navigation: any })
     <StatusBar translucent backgroundColor="transparent"/>
 
   <LinearGradient colors={['#E0F9FF', '#fff', "#F1FCFF", "#fff"]} style={{flex: 1}}>
-  <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh}  /> } showsVerticalScrollIndicator={false} className=" flex-1 p-4 bg-gradient-to-r from-cyan-500 to-blue-500 mb-24 pb-4 ">
+  <ScrollView  nestedScrollEnabled={true}  refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh}  /> } showsVerticalScrollIndicator={false} className=" flex-1 p-4 bg-gradient-to-r from-cyan-500 to-blue-500 mb-24 pb-4 ">
       <View className='flex flex-row justify-between items-center'>
         <View className='mt-8 w-[70vw]'>
           <Text className="text-2xl mb-2 font-thin capitalize" style={{fontFamily:"poppins"}}>Hi {current_user?.name}</Text>
