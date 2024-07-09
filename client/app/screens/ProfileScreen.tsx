@@ -3,18 +3,19 @@ import { View, Text, Image, TouchableOpacity, TextInput, Button, Modal, StyleShe
 import { Formik } from 'formik';
 import { useNavigation } from '@react-navigation/native';
 import { AntDesign, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
-import { AuthContext } from '../context/AuthContext';
+import { AuthContext, useAuthContext } from '../context/AuthContext';
 import * as ImagePicker from 'expo-image-picker';
 
 import { server_url } from '../../config.json';
 import { Toast } from 'toastify-react-native';
+import { User } from '../context/types';
 
 const ProfileScreen: React.FC = () => {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
 
   const [error, setError] = useState<string | null>(null);
-  const {logout, current_user, updateProfile, onUpdateSuccess, onUpdateError} = useContext(AuthContext);
+  const {logout, current_user, updateProfile, onUpdateSuccess, onUpdateError} = useAuthContext();
   const [imageUri, setImageUri] = useState<any | undefined>(undefined);
 
   const pickImage = async () => {
@@ -82,7 +83,7 @@ const ProfileScreen: React.FC = () => {
     }
 
     
-    updateProfile(formData);
+    updateProfile(formData as Partial<User>);
 
     
     if (onUpdateSuccess) {

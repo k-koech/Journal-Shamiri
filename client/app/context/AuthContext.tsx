@@ -22,6 +22,8 @@ interface AuthContextType {
   onChange: boolean;
   setOnchange: (value: boolean) => void;
   setIsSignup: (value: boolean) => void;
+  onUpdateSuccess: boolean;
+  onUpdateError: boolean;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
