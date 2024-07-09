@@ -10,6 +10,9 @@ import { server_url } from '../../config.json';
 export default function HomeScreen({ navigation }: { navigation: any })
  {
   const { current_user} = useContext(AuthContext);
+  
+
+
   const [clickedCategory, setClickedCategory] = useState('All')
   const categories = ["All", 'Personal', 'Work', 'Travel', 'Other']
 

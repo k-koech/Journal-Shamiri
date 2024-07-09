@@ -195,6 +195,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     updateProfile,
     isSignup,
     setIsSignup,
+    token_pair,
 
     onChange,
     setOnchange,
