@@ -1,28 +1,41 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, Modal, TouchableOpacity, Platform, KeyboardAvoidingView } from 'react-native';
 import { Formik } from 'formik';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { ScrollView } from 'react-native-gesture-handler';
+import { useJournalContext } from '../context/JournalContext';
 
-// Dummy data (replace with actual journal data from API or state)
-const journalData = {
-  id: 1,
-  title: 'Sample Journal',
-  content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-  category: 'Personal',
+export type JournalDetailScreenProps = {
+  route: {
+    params: {
+      id: string;  
+    };
+  };
+  navigation: any; 
 };
 
-const JournalDetailScreen: React.FC = () => {
+const JournalDetailScreen: React.FC<JournalDetailScreenProps> = ({ route }) => {
+  const {journals, updateJournal} = useJournalContext()
+  const [journalData, setJournalData] = useState<any>(null);
+
+  const { id } = route.params;
+
+  useEffect(() => {
+     const j_data = journals && journals.find( (journal ) => journal.id=== parseInt(id) )
+     setJournalData(j_data)
+
+  }, [journals, id]);
+
   const navigation = useNavigation();
-  const route = useRoute();
+
   const [modalVisible, setModalVisible] = useState(false);
 
-  // Function to update journal
   const handleUpdate = (values: any) => {
-    // Perform update logic (e.g., API call)
-    console.log('Updated Journal:', values);
+
+    
     setModalVisible(false);
+    updateJournal(parseInt(id), values)
   };
 
   return (
@@ -41,7 +54,7 @@ const JournalDetailScreen: React.FC = () => {
 
           <View className='flex items-center justify-center my-6 h-[30vh]'>
             <View className="w-[80vw] rounded-xl">
-              <Text className='text-center text-2xl text-white' style={{fontFamily:"poppins" }}>{journalData.title}</Text>
+              <Text className='text-center text-2xl text-white' style={{fontFamily:"poppins" }}>{journalData?.title} </Text>
             </View>
           </View>
 
@@ -49,11 +62,11 @@ const JournalDetailScreen: React.FC = () => {
           
           <View className='flex-1 shadow-xl bg-gray-200 rounded-t-[20px] px-4 pb-4 pt-10 '>  
             <View className='flex flex-row shadow-xl justify-between pb-4 pt-10 '>
-              <Text className="text-md text-white bg-[#026D87] rounded-lg px-2 py-1">{journalData.category}</Text>
+              <Text className="text-md text-white bg-[#026D87] rounded-lg px-2 py-1">{journalData?.category}</Text>
               <Text className="text-sm text-gray-700 mb-2">Created on 2024-12-12</Text>
             </View>
-            <Text className="text-2xl font-bold mb-2" style={{fontFamily:"roboto"}}>{journalData.title}</Text>
-            <Text className="text-lg text-gray-700 mb-2">{journalData.content}</Text>
+            <Text className="text-2xl font-bold mb-2" style={{fontFamily:"roboto"}}>{journalData?.title}</Text>
+            <Text className="text-lg text-gray-700 mb-2">{journalData?.content}</Text>
           </View>
 
           {/* Update Button */}
@@ -87,9 +100,9 @@ const JournalDetailScreen: React.FC = () => {
             <Text className="text-2xl font-bold mb-4">Update Journal</Text>
             <Formik
               initialValues={{
-                title: journalData.title,
-                content: journalData.content,
-                category: journalData.category,
+                title: journalData?.title,
+                content: journalData?.content,
+                category: journalData?.category,
               }}
               onSubmit={handleUpdate}
             >
@@ -118,7 +131,7 @@ const JournalDetailScreen: React.FC = () => {
                     onBlur={handleBlur('category')}
                     value={values.category}
                   />
-                  <TouchableOpacity onPress={()=>handleSubmit}
+                  <TouchableOpacity onPress={()=>handleSubmit()}
                     className="bg-green-500 p-3 rounded-lg mb-2"
                   >
                     <Text className="text-white text-center text-lg">Update</Text>

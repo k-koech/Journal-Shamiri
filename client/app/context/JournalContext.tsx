@@ -74,14 +74,14 @@ console.log('====================================');
         }
 
     }) 
-    .catch(error => Toast.error('Error creating journal entry:', error));
+    .catch(error => Toast.error('Error creating journal entry:', "top"));
   };
 
   
 
   // Function to edit a journal entry
   const updateJournal = (entryId: number, data: Partial<JournalEntry>) => {
-    fetch(`${server_url}/journal-entry/${entryId}/`, {
+    fetch(`${server_url}/journal-entry/${entryId}`, {
       method: 'PUT',
       headers: {
         'Authorization': `Bearer ${token_pair?.access}`,
@@ -103,7 +103,7 @@ console.log('====================================');
         }
        
     })
-    .catch(error => console.error('Error editing journal entry:', error));
+    .catch(error => Toast.error('Error editing journal entry:', "top"));
   };
 
 
@@ -129,7 +129,7 @@ console.log('====================================');
             Toast.error('Error creating journal entry:', 'top');
         }
     }) 
-    .catch(error => console.error('Error deleting journal entry:', error));
+    .catch(error => Toast.error('Error deleting journal entry:', "top"));
   };
 
 

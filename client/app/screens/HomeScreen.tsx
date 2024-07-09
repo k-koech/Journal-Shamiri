@@ -39,7 +39,10 @@ export default function HomeScreen({ navigation }: { navigation: any })
 
   }, [journals])
 
-  
+  const onNavigateToJournalDetailScreen = (journalId: number) => {
+      navigation.navigate('JournalDetail', { id: journalId });
+  // navigation.navigate("JournalDetail") 
+  }
   return ( 
     <SafeAreaView className="flex-1">   
     <StatusBar translucent backgroundColor="transparent"/>
@@ -120,7 +123,7 @@ export default function HomeScreen({ navigation }: { navigation: any })
             :
             
             filteredJournals && filteredJournals.map && filteredJournals.map((journal: any) => (
-              <TouchableOpacity onPress={() => navigation.navigate("JournalDetail") } className='flex min-h-[10vh] flex-row justify-between jhitems-center border border-gray-300 rounded-lg mb-4'>
+              <TouchableOpacity onPress={() => onNavigateToJournalDetailScreen(journal.id) } className='flex min-h-[10vh] flex-row justify-between jhitems-center border border-gray-300 rounded-lg mb-4'>
                   <View className='w-[20%] jh-full rounded-lg bg-[#026D87] flex justify-center items-center'>
                     <Text className='text-white text-xl font-bold uppercase'>{journal?.title[0]}</Text>
                   </View>
