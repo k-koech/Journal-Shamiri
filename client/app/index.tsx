@@ -14,6 +14,7 @@ import Spinner from './components/Spinner';
 import ToastManager from 'toastify-react-native';
 import { View } from 'react-native';
 import { AuthContext, AuthProvider } from './context/AuthContext';
+import { JournalProvider } from './context/JournalContext';
 
 const Stack = createStackNavigator();
 
@@ -33,7 +34,9 @@ export default function index() {
     <View className="flex-1 bg-white">
     <NavigationContainer independent={true}>      
       <AuthProvider>
+        <JournalProvider>
               <App />
+        </JournalProvider>
       </AuthProvider>
     </NavigationContainer>
   </View>

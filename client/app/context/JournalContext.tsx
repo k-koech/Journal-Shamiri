@@ -30,8 +30,7 @@ interface JournalContextType {
   getSummaryBetweenDates: (startDate: string, endDate: string) => void;
 }
 
-// Create the JournalContext
-const JournalContext = createContext<JournalContextType | undefined>(undefined);
+export const JournalContext = createContext<JournalContextType | undefined>(undefined);
 
 
 

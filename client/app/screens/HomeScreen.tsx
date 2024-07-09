@@ -4,13 +4,15 @@ import { AntDesign, Ionicons } from '@expo/vector-icons'
 import { LinearGradient } from 'expo-linear-gradient';
 import { AuthContext } from '../context/AuthContext';
 import { server_url } from '../../config.json';
+import { JournalContext } from '../context/JournalContext';
+import Spinner from '../components/Spinner';
 
 
 
 export default function HomeScreen({ navigation }: { navigation: any })
  {
   const { current_user} = useContext(AuthContext);
-  
+  const {journals} = useContext(JournalContext)
 
 
   const [clickedCategory, setClickedCategory] = useState('All')
@@ -87,20 +89,32 @@ export default function HomeScreen({ navigation }: { navigation: any })
         <View>
           <View>
 
+            {
+              journals.length === 0 ?
+              <View className='flex justify-center items-center mt-6'>
+                <Text className='text-xl text-gray-500'>No Journals Yet</Text>
+                <TouchableOpacity onPress={() => navigation.navigate("Add Journal") } className='bg-[#026D87] p-2 rounded-lg'>
+                  <Text className='text-white'>Create Journal</Text>
+                </TouchableOpacity>
+              </View>
+              :
+              <></>
+            }
+
             <View>
-            { [1, 2, 3, 4,5,6,7].map((item) => (
+            { journals && journals.map((journal) => (
               <TouchableOpacity onPress={() => navigation.navigate("JournalDetail") } className='flex min-h-[10vh] flex-row justify-between jhitems-center border border-gray-300 rounded-lg mb-4'>
                   <View className='w-[20%] jh-full rounded-lg bg-[#026D87] flex justify-center items-center'>
-                    <Text className='text-white text-2xl font-bold'>J</Text>
+                    <Text className='text-white text-2xl font-bold uppercase'>{journal?.title[0]}</Text>
                   </View>
 
                 <View className='flex-1 flex-row justify-between '>                  
                   <View className='px-2 flex-1'>
-                    <Text className='text-xl'>Title</Text>
-                    <Text className=''>Description</Text>
+                    <Text className='text-xl'>{journal.title}</Text>
+                    <Text className=''>{journal?.description}</Text>
                     <View className='flex w-full flex-row items-center justify-between'>
-                      <Text className='text-sm text-white bg-[#026D87] rounded-sm px-1.5'>Personal</Text>                    
-                      <Text className='text-sm text-gray-700'>12-12-2024</Text>
+                      <Text className='text-sm text-white bg-[#026D87] rounded-sm px-1.5'>{journal?.category}</Text>                    
+                      <Text className='text-sm text-gray-700'>{journal?.date}</Text>
                     </View>
                   </View>
                   <View className='flex justify-center w-6'>
