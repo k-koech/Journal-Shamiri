@@ -3,11 +3,11 @@ import { View, Text, TextInput, Button, TouchableOpacity, Alert, Platform, Keybo
 import { Formik } from 'formik';
 import {Ionicons} from '@expo/vector-icons';
 import { useNavigation } from 'expo-router';
-import { JournalContext } from '../context/JournalContext';
+import { JournalContext, useJournalContext } from '../context/JournalContext';
 import { Toast } from 'toastify-react-native';
 
 const AddJournalScreen: React.FC = () => {
-    const {createJournal} = useContext(JournalContext);
+    const {createJournal} = useJournalContext();
     const navigation = useNavigation();
 
   // Initial form values

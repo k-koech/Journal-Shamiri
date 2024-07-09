@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { server_url } from '../../config.json';
-import { AuthContext } from './AuthContext';
+import { AuthContext, useAuthContext } from './AuthContext';
 import { Toast } from 'toastify-react-native';
 
 // Define the Journal Entry type
@@ -43,7 +43,7 @@ export const JournalProvider: React.FC<{ children: ReactNode }> = ({ children })
 
   const [onJournalChange, setOnJournalChange] = useState<boolean>(false);
 
-  const {token_pair} = useContext(AuthContext);
+  const {token_pair} =useAuthContext();
 
 console.log('====================================');
 console.log(token_pair);
@@ -169,6 +169,7 @@ console.log('====================================');
 
         onJournalChange,
         setOnJournalChange,
+
       }}
     >
       {children}
@@ -177,7 +178,7 @@ console.log('====================================');
 };
 
 // Custom hook to use the JournalContext
-export const useJournal = () => {
+export const useJournalContext = () => {
   const context = useContext(JournalContext);
   if (context === undefined) {
     throw new Error('useJournal must be used within a JournalProvider');

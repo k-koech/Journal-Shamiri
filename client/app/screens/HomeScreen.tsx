@@ -1,18 +1,17 @@
 import { View,Button, Text,StatusBar, ScrollView, SafeAreaView, TextInput, TouchableOpacity, Touchable, Image, RefreshControl } from 'react-native'
-import React,{useContext, useState} from 'react'
+import React,{useContext, useEffect, useState} from 'react'
 import { AntDesign, Ionicons } from '@expo/vector-icons'
 import { LinearGradient } from 'expo-linear-gradient';
-import { AuthContext } from '../context/AuthContext';
+import { useAuthContext } from '../context/AuthContext';
 import { server_url } from '../../config.json';
-import { JournalContext } from '../context/JournalContext';
+import { JournalContext, useJournalContext } from '../context/JournalContext';
 import Spinner from '../components/Spinner';
-
-
 
 export default function HomeScreen({ navigation }: { navigation: any })
  {
-  const {journals, onJournalChange, setOnJournalChange} = useContext(JournalContext)
-  const {current_user, onChange, setOnchange} = useContext(AuthContext)
+  const {journals, onJournalChange, setOnJournalChange} = useJournalContext()
+  const [filteredJournals, setFilteredJournals] = useState<any>(journals)
+  const {current_user, onChange, setOnchange} = useAuthContext()
 
 
   const [clickedCategory, setClickedCategory] = useState('All')
@@ -27,8 +26,13 @@ export default function HomeScreen({ navigation }: { navigation: any })
 
   const handleCategoryPress = (category: string) => {
     setClickedCategory(category)
+    
   }
-console.log(journals);
+  useEffect(() => {
+    setClickedCategory('All')
+
+
+  }, [onChange])
 
   
   return ( 

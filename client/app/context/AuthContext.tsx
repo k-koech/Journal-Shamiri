@@ -18,6 +18,10 @@ interface AuthContextType {
   logout: () => void;
   register: (userData: Partial<User>) => void;
   updateProfile: (userData: Partial<User>) => void;
+
+  onChange: boolean;
+  setOnchange: (value: boolean) => void;
+  setIsSignup: (value: boolean) => void;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -211,7 +215,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 };
 
 // Custom hook to use the auth context
-export const useAuth = (): AuthContextType => {
+export const useAuthContext = (): AuthContextType => {
   const context = useContext(AuthContext);
   if (!context) {
     throw Toast.error('useAuth must be used within an AuthProvider', "top");

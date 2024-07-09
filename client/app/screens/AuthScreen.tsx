@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { View, Text, TextInput,Platform, TouchableOpacity, Alert, ScrollView, KeyboardAvoidingView, Keyboard } from 'react-native';
 import { Toast } from 'toastify-react-native';
-import { AuthContext } from '../context/AuthContext';
+import { AuthContext, useAuthContext } from '../context/AuthContext';
 
 
 interface RegisterParams {
@@ -13,7 +13,7 @@ interface RegisterParams {
 
 
 export default function AuthScreen() {
-  const { register,login, isSignup, setIsSignup } = useContext(AuthContext);
+  const { register,login, isSignup, setIsSignup } = useAuthContext();
 
   const [email, setEmail] = useState<string>('');
   const [username, setUsername] = useState<string>('');
