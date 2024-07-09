@@ -5,7 +5,7 @@ import { Toast } from 'toastify-react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 
-// Define the Journal Entry type
+// Define the Journal  type
 export type JournalEntry = {
   id: number;
   title: string;

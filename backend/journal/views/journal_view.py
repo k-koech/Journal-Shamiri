@@ -89,40 +89,30 @@ def delete_journal_entry(request, entry_id):
 # Summary between Dates
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def summary_between_dates(request):
-    start_date = request.GET.get('start_date')
-    end_date= request.GET.get('end_date')
-
-    print("start_date",start_date)
-    print("end_date",end_date)
-
-    if not start_date or not end_date:
-        return JsonResponse({"error": "Both start_date and end_date parameters are required."}, status=status.HTTP_400_BAD_REQUEST)
-
-    try:
-        start_date = datetime.strptime(start_date, '%Y-%m-%d')
-        end_date = datetime.strptime(end_date, '%Y-%m-%d')
-        if start_date > end_date:
-            return JsonResponse({"error":"start_date cannot be after end_date."})
-    except (ValueError, TypeError) as e:
-        return JsonResponse({"error": f"Dates must be in the format YYYY-MM-DD and start_date must be before or equal to end_date. Details: {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
-
-
-    # Fetch journal entries within the date range
-    entries = Journal.objects.filter(user=request.user, date__range=(start_date, end_date))
-
-    # Compute the total number of entries and entries by category
-    total_entries = entries.count()
-    entries_by_category = entries.values('category').annotate(total=models.Count('category'))
-
-    entries_list = list(entries.values('id', 'title', 'content', 'category', 'date'))
-
-    summary = {
-        "start_date": start_date,
-        "end_date": end_date,
-        "total_entries": total_entries,
-        "entries_by_category": list(entries_by_category),  
-        "entries": entries_list  
-    }
-
-    return JsonResponse(summary, status=status.HTTP_200_OK)
+def summary(request):
+    user = request.user
+    period = request.query_params.get('period', 'daily')  
+    batch = int(request.query_params.get('batch', '0')) 
+    
+    now = timezone.now()
+    
+    if period == 'daily':
+        start_date = now - timezone.timedelta(days=1 * batch)
+        end_date = now - timezone.timedelta(days=1 * (batch - 1))
+    elif period == 'weekly':
+        start_date = now - timezone.timedelta(weeks=1 * batch)
+        end_date = now - timezone.timedelta(weeks=1 * (batch - 1))
+    elif period == 'monthly':
+        current_month = now.month - batch
+        current_year = now.year
+        while current_month <= 0:
+            current_month += 12
+            current_year -= 1
+        start_date = timezone.datetime(current_year, current_month, 1)
+        end_date = start_date + timezone.timedelta(days=calendar.monthrange(current_year, current_month)[1])
+    else:
+        return Response({"error": "Invalid period parameter"}, status=400)
+    
+    summary = Journal.objects.filter(user=user, date__gte=start_date, date__lt=end_date).values('category').annotate(count=Count('id'))
+    
+    return Response(summary)

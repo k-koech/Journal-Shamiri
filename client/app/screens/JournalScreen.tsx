@@ -1,20 +1,65 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, FlatList, Platform } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, TextInput, FlatList } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { ScrollView } from 'react-native-gesture-handler';
-
-const journals = [
-  { id: 1, title: 'Journal 1', content: 'Content 1', date: '2024-07-01', category: 'Personal' },
-  { id: 2, title: 'Journal 2', content: 'Content 2', date: '2024-07-02', category: 'Work' },
-  { id: 3, title: 'Journal 3', content: 'Content 3', date: '2024-07-03', category: 'Travel' },
-];
+import { JournalEntry, useJournalContext } from '../context/JournalContext';
 
 const JournalPage: React.FC = () => {
   const navigation = useNavigation();
   const [selectedPeriod, setSelectedPeriod] = useState('daily');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filteredJournals, setFilteredJournals] = useState<JournalEntry[]>([]);
+  const [displayedJournals, setDisplayedJournals] = useState<JournalEntry[]>([]);
+  const [page, setPage] = useState(1);
+  const recordsPerPage = 20;
 
-  const filteredJournals = journals; 
+  const { journals } = useJournalContext();
+
+  useEffect(() => {
+    filterJournals();
+  }, [selectedPeriod, searchQuery, journals]);
+
+  useEffect(() => {
+    loadMoreJournals();
+  }, [filteredJournals, page]);
+
+  const filterJournals = () => {
+    const now = new Date();
+    let filtered = journals;
+
+    // Filter based on period
+    if (selectedPeriod === 'daily') {
+      filtered = journals.filter(journal => new Date(journal.date).toDateString() === now.toDateString());
+    } else if (selectedPeriod === 'weekly') {
+      const startOfWeek = new Date(now.setDate(now.getDate() - now.getDay()));
+      filtered = journals.filter(journal => new Date(journal.date) >= startOfWeek);
+    } else if (selectedPeriod === 'monthly') {
+      const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+      filtered = journals.filter(journal => new Date(journal.date) >= startOfMonth);
+    }
+
+    // Filter based on search query
+    if (searchQuery) {
+      filtered = filtered.filter(journal =>
+        journal.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        journal.content.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+
+    setFilteredJournals(filtered);
+    setPage(1);  // Reset page when filters change
+    setDisplayedJournals(filtered.slice(0, recordsPerPage));
+  };
+
+  const loadMoreJournals = () => {
+    const nextPageRecords = filteredJournals.slice(page * recordsPerPage, (page + 1) * recordsPerPage);
+    setDisplayedJournals(prevState => [...prevState, ...nextPageRecords]);
+  };
+
+  const onNavigateToJournalDetailScreen = (journalId: number) => {
+    navigation.navigate('JournalDetail', { id: journalId });
+  };
 
   return (
     <ScrollView className="flex-1 p-4 bg-gray-100">
@@ -27,31 +72,51 @@ const JournalPage: React.FC = () => {
 
       <Text className="text-2xl font-bold text-center mt-12 mb-4">All Journals</Text>
 
+      {/* Search Input */}
+      <TextInput
+        value={searchQuery}
+        onChangeText={setSearchQuery}
+        placeholder="Search journals..."
+        className="mb-4 p-2 border border-gray-300 rounded-lg"
+      />
+
       {/* Period Selection */}
       <View className="flex-row justify-center mb-4">
         {['daily', 'weekly', 'monthly'].map(period => (
           <TouchableOpacity
             key={period}
             onPress={() => setSelectedPeriod(period)}
-            className={`px-4 py-2 mx-1 rounded-lg ${selectedPeriod === period ? 'bg-[#026D87]' : 'bg-gray-300'}`}
+            className={`px-4 py-2 mx-1 rounded-lg ${selectedPeriod === period ? 'bg-[#026D87]' : 'bg-gray-400'}`}
           >
             <Text className="text-white">{period.charAt(0).toUpperCase() + period.slice(1)}</Text>
           </TouchableOpacity>
         ))}
       </View>
 
-
-      {
-        filteredJournals && filteredJournals.map((journal) => (
-          <View className="p-4 mb-4 bg-white rounded-lg shadow-md">
+      {/* Journal Entries */}
+      {displayedJournals.map((journal) => (
+        <TouchableOpacity
+          key={journal.id}
+          onPress={() => onNavigateToJournalDetailScreen(journal.id)}
+          className="p-4 mb-4 bg-white rounded-lg shadow-md"
+        >
           <Text className="text-xl font-bold">{journal.title}</Text>
           <Text className="text-gray-700">{journal.content.substring(0, 100)}...</Text>
-          <Text className="text-gray-500">{journal.date} - {journal.category}</Text>
-        </View>
-        ))
-      }
+          <View className='flex-row items-center justify-between'>
+            <Text className="text-gray-500">{journal.date}</Text>
+            <Text className="text-white px-2 py-1 bg-[#026D87] rounded-lg text-sm">{journal.category}</Text>
+          </View>
+        </TouchableOpacity>
+      ))}
 
-
+      {filteredJournals.length > displayedJournals.length && (
+        <TouchableOpacity
+          onPress={() => setPage(prevPage => prevPage + 1)}
+          className="p-4 bg-[#026D87] rounded-lg"
+        >
+          <Text className="text-white text-center">Load More</Text>
+        </TouchableOpacity>
+      )}
     </ScrollView>
   );
 };

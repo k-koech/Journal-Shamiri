@@ -65,7 +65,7 @@ export default function HomeScreen({ navigation }: { navigation: any })
           <TouchableOpacity onPress={() => navigation.navigate('Profile')} className='bg-white p-2 rounded-lg'>
              {
                  current_user?.picture?
-                  <Image source={{uri: server_url + current_user?.picture}} className='rounded-full' style={{width: 50, height: 50}} />
+                  <Image source={{uri: server_url + current_user?.picture}} className='rounded-full mx-autor' style={{width: 50, height: 50}} />
                   :
                   <View className='flex items-center'>
                   <Ionicons name="person" size={24} color="#009FC6" />
@@ -76,15 +76,14 @@ export default function HomeScreen({ navigation }: { navigation: any })
         </View>
       </View>
 
-      <View className='flex flex-row items-center justify-between rounded-lg mt-4'>
+      <TouchableOpacity  onPress={() => navigation.navigate('Journal')} className='flex flex-row items-center justify-between rounded-lg mt-4'>
         <Text className='text-lg'>Filter Journals by Date</Text>
-        <TouchableOpacity
-          onPress={() => navigation.navigate('Journal')}
+        <View
           className='w-[13%] xbg-blue-500 p-2 rounded-lg justify-center items-center'
         >
           <AntDesign name="filter" size={24} color="#009FC6" />
-        </TouchableOpacity>
-      </View>
+        </View>
+      </TouchableOpacity>
 
     
  
