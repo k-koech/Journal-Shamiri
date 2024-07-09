@@ -21,13 +21,17 @@ export type Summary = {
   entries: JournalEntry[];
 };
 
-// Define the context value type
+
+
 interface JournalContextType {
   journals: JournalEntry[];
   createJournal: (form_data: JournalEntry ) => void;
   updateJournal: (entryId: number, data: Partial<JournalEntry>) => void;
   deleteJournalEntry: (entryId: number) => void;
   getSummaryBetweenDates: (startDate: string, endDate: string) => void;
+
+  onJournalChange: boolean;
+ setOnJournalChange: (value: boolean) => void;
 }
 
 export const JournalContext = createContext<JournalContextType | undefined>(undefined);
@@ -36,12 +40,19 @@ export const JournalContext = createContext<JournalContextType | undefined>(unde
 
 export const JournalProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [journals, setJournals] = useState<JournalEntry[]>([]);
+
+  const [onJournalChange, setOnJournalChange] = useState<boolean>(false);
+
   const {token_pair} = useContext(AuthContext);
+
+console.log('====================================');
+console.log(token_pair);
+console.log('====================================');
 
 
   // Function to create a new journal entry
   const createJournal = (form_data: JournalEntry) => {
-    fetch(`${server_url}/journal-entry/`, {
+    fetch(`${server_url}/journal-entry`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token_pair?.access}`,
@@ -53,6 +64,7 @@ export const JournalProvider: React.FC<{ children: ReactNode }> = ({ children })
     .then((response)=> {
         if(response.success){
             Toast.success('Journal created successfully');
+            setOnJournalChange(!onJournalChange);
         }
         else if(response.error){
             Toast.error(response.error, 'top');
@@ -81,6 +93,7 @@ export const JournalProvider: React.FC<{ children: ReactNode }> = ({ children })
     .then((response)=> {
         if(response.success){
             Toast.success('Journal updated successfully');
+            setOnJournalChange(!onJournalChange);
         }
         else if(response.error){
             Toast.error(response.error, 'top');
@@ -107,6 +120,7 @@ export const JournalProvider: React.FC<{ children: ReactNode }> = ({ children })
     .then((response)=> {
         if(response.success){
             Toast.success('Journal deleted successfully');
+            setOnJournalChange(!onJournalChange);
         }
         else if(response.error){
             Toast.error(response.error, 'top');
@@ -123,17 +137,27 @@ export const JournalProvider: React.FC<{ children: ReactNode }> = ({ children })
 
     // Fetch all journal entries
     useEffect(() => {
-        fetch(`${server_url}/journal-entries/`, {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${token_pair?.access}`,
-            'Content-Type': 'application/json',
-          },
-        })
-        .then(response => response.json())
-        .then(data => setJournals(data))
-        .catch(error => console.error('Error fetching journal entries:', error));
-      }, [token_pair]);
+        if(token_pair?.access)
+        {
+            fetch(`${server_url}/journal-entries`, {
+                method: 'GET',
+                headers: {
+                  'Authorization': `Bearer ${token_pair?.access}`,
+                  'Content-Type': 'application/json',
+                },
+              })
+              .then(response => response.json())
+              .then(data => {
+                 data instanceof Array &&  setJournals(data)
+
+              })
+              .catch(error => Toast.error('Error fetching journal entries:', "top"));
+        }
+
+      }, [token_pair, onJournalChange]);
+
+      console.log("ppppppp xx ", journals);
+      
 
   return (
     <JournalContext.Provider
@@ -142,6 +166,9 @@ export const JournalProvider: React.FC<{ children: ReactNode }> = ({ children })
         createJournal,
         updateJournal,
         deleteJournalEntry,
+
+        onJournalChange,
+        setOnJournalChange,
       }}
     >
       {children}

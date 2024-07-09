@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { View, Text, TextInput, Button, TouchableOpacity, Alert, Platform, KeyboardAvoidingView, StyleSheet } from 'react-native';
 import { Formik } from 'formik';
 import {Ionicons} from '@expo/vector-icons';
 import { useNavigation } from 'expo-router';
+import { JournalContext } from '../context/JournalContext';
+import { Toast } from 'toastify-react-native';
 
 const AddJournalScreen: React.FC = () => {
-
+    const {createJournal} = useContext(JournalContext);
     const navigation = useNavigation();
 
   // Initial form values
@@ -13,22 +15,25 @@ const AddJournalScreen: React.FC = () => {
     title: '',
     content: '',
     category: 'Personal',
-    date: new Date().toISOString().split('T')[0], // Default to today's date
   };
 
   // Function to handle form submission
   const handleSubmit = (values: any) => {
 
     if (values.title.length < 4) {
-      Alert.alert('Validation Error', 'Title should be at least 4 characters long.');
+      Toast.error('Title should be at least 4 characters long.', 'top');
       return;
     }
     if (values.content.length < 10) {
-      Alert.alert('Validation Error', 'Content should be at least 10 characters long.');
+      Toast.error('Content should be at least 10 characters long.', 'top');
       return;
     }
+    console.log(values.category);
+    
+    
+    createJournal(values);
 
- 
+     
     
     
   };

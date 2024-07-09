@@ -9,7 +9,10 @@ from rest_framework.permissions import IsAuthenticated
 from datetime import datetime
 from django.db import models
 
+
+
 # Create Journal 
+@permission_classes([IsAuthenticated])
 @api_view(['POST'])
 def create_journal_entry(request):
     serializer = JournalSerializer(data=request.data)
@@ -26,6 +29,7 @@ def create_journal_entry(request):
         serializer.save(user=request.user)
         return JsonResponse({"success":"Added successfully"}, status=status.HTTP_201_CREATED)
     return JsonResponse({"error":"Error creating the journal"}, status=status.HTTP_400_BAD_REQUEST)
+
 
 # Fetch Journal 
 @api_view(['GET'])

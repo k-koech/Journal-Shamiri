@@ -56,7 +56,7 @@ class Journal(models.Model):
     CATEGORY_CHOICES = [
         ('Personal', 'Personal'),
         ('Work', 'Work'),
-        ('Tavel', 'Travel'),
+        ('Travel', 'Travel'),
         ('Other', 'Other'),
     ]
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='journal_entries')
