@@ -53,6 +53,9 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
 from rest_framework.views import APIView
 
+
+
+
 class CustomLogoutView(APIView):
     def post(self, request, *args, **kwargs):
         refresh_token = request.data.get('refresh')
@@ -108,17 +111,15 @@ def update_user(request):
         if 'name' in request.data:
             user.name = request.data['name']
 
-        # If a new picture is provided, remove the old one
-        if 'picture' in request.data:
+        if 'picture' in request.data and request.data['picture']:
             # Update picture
+            old_picture = user.picture            
             user.picture = request.data['picture']
-            old_picture = user.picture
+
             if old_picture:
                 old_image_path = old_picture.path
-            
                 if os.path.exists(old_image_path):
                     os.remove(old_image_path)
-                    
                     # Check if the folder is now empty and remove it if so
                     folder_path = os.path.dirname(old_image_path)
                     if not os.listdir(folder_path):  # Folder is empty
