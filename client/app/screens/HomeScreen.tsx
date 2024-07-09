@@ -1,4 +1,4 @@
-import { View,Button, Text,StatusBar, ScrollView, SafeAreaView, TextInput, TouchableOpacity, Touchable, Image, RefreshControl } from 'react-native'
+import { View,Button, Text,StatusBar, ScrollView, SafeAreaView, TextInput, TouchableOpacity, Touchable, Image, RefreshControl, StyleSheet } from 'react-native'
 import React,{useContext, useEffect, useState} from 'react'
 import { AntDesign, Ionicons } from '@expo/vector-icons'
 import { LinearGradient } from 'expo-linear-gradient';
@@ -6,6 +6,8 @@ import { useAuthContext } from '../context/AuthContext';
 import { server_url } from '../../config.json';
 import { JournalContext, useJournalContext } from '../context/JournalContext';
 import Spinner from '../components/Spinner';
+import { SwipeListView } from 'react-native-swipe-list-view';
+import { Modal } from 'react-native';
 
 export default function HomeScreen({ navigation }: { navigation: any })
  {
@@ -41,8 +43,9 @@ export default function HomeScreen({ navigation }: { navigation: any })
 
   const onNavigateToJournalDetailScreen = (journalId: number) => {
       navigation.navigate('JournalDetail', { id: journalId });
-  // navigation.navigate("JournalDetail") 
   }
+
+ 
   return ( 
     <SafeAreaView className="flex-1">   
     <StatusBar translucent backgroundColor="transparent"/>
@@ -122,30 +125,47 @@ export default function HomeScreen({ navigation }: { navigation: any })
             </View>
             :
             
-            filteredJournals && filteredJournals.map && filteredJournals.map((journal: any) => (
-              <TouchableOpacity onPress={() => onNavigateToJournalDetailScreen(journal.id) } className='flex min-h-[10vh] flex-row justify-between jhitems-center border border-gray-300 rounded-lg mb-4'>
-                  <View className='w-[20%] jh-full rounded-lg bg-[#026D87] flex justify-center items-center'>
-                    <Text className='text-white text-xl font-bold uppercase'>{journal?.title[0]}</Text>
-                  </View>
-
-                <View className='flex-1 flex-row justify-between '>                  
-                  <View className='px-2 flex-1'>
-                    <Text className='text-xl'>{journal.title}</Text>
-                    <Text className='flex-1'>
-                      {journal.content?.length > 25 ? journal.content.slice(0, 25) + '...': journal.content}
-                    </Text>
-                    <View className='flex w-full flex-row items-center justify-between mb-1'>
-                      <Text className='text-sm text-white bg-[#026D87] rounded-sm px-1.5'>{journal?.category}</Text>                    
-                      <Text className='text-sm text-gray-700'>{journal?.date}</Text>
-                    </View>
-                  </View>
-                  <View className='flex justify-center w-6'>
-                     <Ionicons name="chevron-forward" size={24} color="#009FC6" />
+            <SwipeListView
+            data={journals}
+            renderItem={( { item: journal } ) => (
+                <TouchableOpacity   onPress={() => onNavigateToJournalDetailScreen(journal.id) } className='flex min-h-[10vh] flex-row justify-between jhitems-center border bg-gray-50 border-gray-300 rounded-lg mb-4'>
+                <View className='w-[20%] jh-full rounded-lg bg-[#026D87] flex justify-center items-center'>
+                  <Text className='text-white text-xl font-bold uppercase'>{journal?.title[0]}</Text>
+                </View>
+    
+              <View className='flex-1 flex-row justify-between '>                  
+                <View className='px-2 flex-1'>
+                  <Text className='text-xl'>{journal?.title}</Text>
+                  <Text className='flex-1'>
+                    {journal?.content?.length > 25 ? journal?.content.slice(0, 25) + '...': journal?.content}
+                  </Text>
+                  <View className='flex w-full flex-row items-center justify-between mb-1'>
+                    <Text className='text-sm text-white bg-[#026D87] rounded-sm px-1.5'>{journal?.category}</Text>                    
+                    <Text className='text-sm text-gray-700'>{journal?.date}</Text>
                   </View>
                 </View>
-              </TouchableOpacity>
-            ))}
-              
+                <View className='flex justify-center w-6'>
+                  <Ionicons name="chevron-forward" size={24} color="#009FC6" />
+                </View>
+              </View>
+            </TouchableOpacity>
+    
+            )}
+    
+            renderHiddenItem={({ item }, rowMap) => (
+              <View className='flex items-end justify-end h-[10vh]'>
+              <View className="flex w-16 flex-col justify-center items-center pl-4 h-full">
+                  <ConfirmDelete id={item.id} />
+              </View>
+              </View>
+            )}
+    
+            rightOpenValue={-80}
+            previewRowKey={'0'}
+            previewOpenValue={-40}
+            previewOpenDelay={1000}
+          />
+            }
               
             </View>
           </View>
@@ -156,4 +176,107 @@ export default function HomeScreen({ navigation }: { navigation: any })
     </LinearGradient>
 </SafeAreaView>
   )
+}
+
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'white',
+  },
+  rowFront: {
+    alignItems: 'center',
+    backgroundColor: '#CCC',
+    borderBottomColor: 'black',
+    borderBottomWidth: 1,
+    justifyContent: 'center',
+    height: 50,
+  },
+  rowBack: {
+    alignItems: 'center',
+    backgroundColor: '#DDD',
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingLeft: 15,
+  },
+  backRightBtn: {
+    alignItems: 'center',
+    bottom: 0,
+    justifyContent: 'center',
+    position: 'absolute',
+    top: 0,
+    width: 75,
+  },
+  backRightBtnLeft: {
+    backgroundColor: 'blue',
+    right: 75,
+  },
+  backRightBtnRight: {
+    backgroundColor: 'red',
+    right: 0,
+  },
+  backTextWhite: {
+    color: '#FFF',
+  },
+});
+
+
+
+const ConfirmDelete = ({ id }: { id: number }) => {
+
+
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const {deleteJournal} = useJournalContext()
+
+
+
+  const confirmJournalDelete = () => {
+    setIsModalVisible(false);
+    deleteJournal(id)    
+  };
+
+  const closeModal = () => {
+    setIsModalVisible(false);
+  };
+
+  function handleOpenModal(id: number) {
+    setIsModalVisible(true);
+  }
+
+  return (
+    <View>
+      <TouchableOpacity onPress={() => handleOpenModal(id)} className='flex items-center justify-center w-16'>
+        <AntDesign name="delete" size={24} color="red" />
+      </TouchableOpacity>
+      <Modal
+        transparent={true}
+        animationType="slide"
+        visible={isModalVisible}
+        onRequestClose={closeModal}
+      >
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(255, 250, 255, 0.5)' }}>
+          <View className="w-72 bg-white border border-gray-300 rounded-lg p-5 items-center">
+            <Text className="text-lg font-bold mb-2">Confirm Delete</Text>
+            <Text className="text-base mb-5">Are you sure you want to delete this journal?</Text>
+            <View className="flex-row gap-4 w-full justify-around">
+              <TouchableOpacity
+                className="flex-1 items-center py-2 rounded-md bg-gray-400 ml-2"
+                onPress={closeModal}
+              >
+                <Text className="text-white text-base">No</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                className="flex-1 items-center py-2 rounded-md bg-red-500 mr-2"
+                onPress={confirmJournalDelete}
+              >
+                <Text className="text-white text-base">Yes</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+    </View>
+  )
+
 }

@@ -184,6 +184,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                   {
                   setCurrentUser(data);
                   }
+                else{
+                  logout();
+                }
               });
       }
     

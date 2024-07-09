@@ -82,7 +82,7 @@ def delete_journal_entry(request, entry_id):
         return JsonResponse({"error": "You are not authorized to delete this entry"}, status=status.HTTP_401_UNAUTHORIZED)
 
     entry.delete()
-    return JsonResponse({"success":"Deleted successfully"},status=status.HTTP_204_NO_CONTENT)
+    return JsonResponse({"success":"Deleted successfully"},status=status.HTTP_200_OK)
 
 
 

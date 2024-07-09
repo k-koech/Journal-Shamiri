@@ -27,7 +27,7 @@ interface JournalContextType {
   journals: JournalEntry[];
   createJournal: (form_data: JournalEntry ) => void;
   updateJournal: (entryId: number, data: Partial<JournalEntry>) => void;
-  deleteJournalEntry: (entryId: number) => void;
+  deleteJournal: (entryId: number) => void;
   getSummaryBetweenDates: (startDate: string, endDate: string) => void;
 
   onJournalChange: boolean;
@@ -108,8 +108,8 @@ console.log('====================================');
 
 
   // Function to delete a journal entry
-  const deleteJournalEntry = (entryId: number) => {
-    fetch(`${server_url}/journal-entry/${entryId}/`, {
+  const deleteJournal = (entryId: number) => {
+    fetch(`${server_url}/journal-entry/${entryId}/delete`, {
       method: 'DELETE',
       headers: {
         'Authorization': `Bearer ${token_pair?.access}`,
@@ -126,7 +126,7 @@ console.log('====================================');
             Toast.error(response.error, 'top');
         }
         else{
-            Toast.error('Error creating journal entry:', 'top');
+            Toast.error('Error deleting journal entry:', 'top');
         }
     }) 
     .catch(error => Toast.error('Error deleting journal entry:', "top"));
@@ -165,7 +165,7 @@ console.log('====================================');
         journals,
         createJournal,
         updateJournal,
-        deleteJournalEntry,
+        deleteJournal,
 
         onJournalChange,
         setOnJournalChange,
