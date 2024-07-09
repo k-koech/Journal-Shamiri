@@ -2,6 +2,8 @@ import React, { createContext, useContext, useState, ReactNode, useEffect } from
 import { server_url } from '../../config.json';
 import { AuthContext, useAuthContext } from './AuthContext';
 import { Toast } from 'toastify-react-native';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 
 // Define the Journal Entry type
 export type JournalEntry = {
@@ -34,20 +36,29 @@ interface JournalContextType {
  setOnJournalChange: (value: boolean) => void;
 }
 
+export type RootStackParamList = {
+  Home: undefined;
+};
+
+type HomeScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'Home'
+>;
+
 export const JournalContext = createContext<JournalContextType | undefined>(undefined);
 
 
 
 export const JournalProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+
+  const navigation =useNavigation<HomeScreenNavigationProp>();
+
   const [journals, setJournals] = useState<JournalEntry[]>([]);
 
   const [onJournalChange, setOnJournalChange] = useState<boolean>(false);
 
   const {token_pair} =useAuthContext();
 
-console.log('====================================');
-console.log(token_pair);
-console.log('====================================');
 
 
   // Function to create a new journal entry
@@ -121,6 +132,7 @@ console.log('====================================');
         if(response.success){
             Toast.success('Journal deleted successfully');
             setOnJournalChange(!onJournalChange);
+            navigation.navigate('Home')
         }
         else if(response.error){
             Toast.error(response.error, 'top');

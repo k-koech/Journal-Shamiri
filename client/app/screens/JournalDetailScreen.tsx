@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, Modal, TouchableOpacity, Platform, KeyboardAvoidingView } from 'react-native';
 import { Formik } from 'formik';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { Ionicons } from '@expo/vector-icons';
+import { AntDesign, Ionicons } from '@expo/vector-icons';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useJournalContext } from '../context/JournalContext';
+import { ConfirmDeleteModal } from '../components/ConfirmDeleteModal';
 
 export type JournalDetailScreenProps = {
   route: {
@@ -44,7 +45,7 @@ const JournalDetailScreen: React.FC<JournalDetailScreenProps> = ({ route }) => {
 
 
       {/* Journal Details */}
-      <View className="mt-8 mb-4  bg-[#026D87] rounded-t-[20px] shadow-md min-h-[100vh]">
+      <View className="mt-8 mb-4  bg-[#026D87] rounded-t-[20px] shadow-md min-h-[90vh]">
           <TouchableOpacity
             onPress={() => navigation.goBack()}
             className="absolute top-4 left-4 p-2"
@@ -70,17 +71,20 @@ const JournalDetailScreen: React.FC<JournalDetailScreenProps> = ({ route }) => {
           </View>
 
           {/* Update Button */}
-          <TouchableOpacity
-            onPress={() => setModalVisible(true)}
-            className="bxg-[#026D87] border bg-white text- p-3 rounded-lg mt-4 self-center mb-8"
-          >
-            <Text className="text-lg">Update Journal</Text>
-          </TouchableOpacity>
+          <View className='flex bg-gray-200 flex-row justify-between items-center py-4'>
+            <TouchableOpacity
+              onPress={() => setModalVisible(true)}
+              className='mx-4'
+            >
+              {/* <Text className="text-lg">Update Journal</Text> */}
+              <AntDesign name="edit" size={24} color="green" />
+            </TouchableOpacity>
+          
+            <ConfirmDeleteModal id={journalData?.id} />
+          </View>
 
 
       </View>
-
-
 
 
 
@@ -94,7 +98,8 @@ const JournalDetailScreen: React.FC<JournalDetailScreenProps> = ({ route }) => {
       >
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          className="flex-1 justify-center items-center bg-black bg-opacity-50"
+          style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(255, 250, 255, 0.5)' }}
+          className="flex-1 justify-center "
         >
           <View className="bg-white p-6 rounded-lg w-4/5">
             <Text className="text-2xl font-bold mb-4">Update Journal</Text>
@@ -131,17 +136,20 @@ const JournalDetailScreen: React.FC<JournalDetailScreenProps> = ({ route }) => {
                     onBlur={handleBlur('category')}
                     value={values.category}
                   />
-                  <TouchableOpacity onPress={()=>handleSubmit()}
-                    className="bg-green-500 p-3 rounded-lg mb-2"
-                  >
-                    <Text className="text-white text-center text-lg">Update</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() => setModalVisible(false)}
-                    className="bg-red-500 p-3 rounded-lg"
-                  >
-                    <Text className="text-white text-center text-lg">Cancel</Text>
-                  </TouchableOpacity>
+
+                  <View className='flex flex-row justify-between '>
+                      <TouchableOpacity
+                        onPress={() => setModalVisible(false)}
+                        className="bg-gray-400 p-3 rounded-lg"
+                      >
+                        <Text className="text-white text-center text-lg">Cancel</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity onPress={()=>handleSubmit()}
+                        className="bg-green-500 p-3 rounded-lg"
+                      >
+                        <Text className="text-white text-center text-lg px-3">Update</Text>
+                      </TouchableOpacity>
+                  </View>
                 </>
               )}
             </Formik>
