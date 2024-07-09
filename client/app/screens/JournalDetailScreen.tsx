@@ -6,6 +6,8 @@ import { AntDesign, Ionicons } from '@expo/vector-icons';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useJournalContext } from '../context/JournalContext';
 import { ConfirmDeleteModal } from '../components/ConfirmDeleteModal';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '../context/types';
 
 export type JournalDetailScreenProps = {
   route: {
@@ -17,7 +19,7 @@ export type JournalDetailScreenProps = {
 };
 
 const JournalDetailScreen: React.FC<JournalDetailScreenProps> = ({ route }) => {
-  const {journals, updateJournal} = useJournalContext()
+  const {journals} = useJournalContext()
   const [journalData, setJournalData] = useState<any>(null);
 
   const { id } = route.params;
@@ -28,21 +30,16 @@ const JournalDetailScreen: React.FC<JournalDetailScreenProps> = ({ route }) => {
 
   }, [journals, id]);
 
-  const navigation = useNavigation();
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
-  const [modalVisible, setModalVisible] = useState(false);
 
-  const handleUpdate = (values: any) => {
 
-    
-    setModalVisible(false);
-    updateJournal(parseInt(id), values)
-  };
+  function handleUpdate(){
+    navigation.navigate('Add Journal', { journal: journalData }); 
+  }
 
   return (
     <ScrollView className="flex-1 p-4 mb-20 min-h-[100vh]">
-      {/* Back Navigation Button */}
-
 
       {/* Journal Details */}
       <View className="mt-8 mb-4  bg-[#026D87] rounded-t-[20px] shadow-md min-h-[90vh]">
@@ -73,16 +70,14 @@ const JournalDetailScreen: React.FC<JournalDetailScreenProps> = ({ route }) => {
           {/* Update Button */}
           <View className='flex bg-gray-200 flex-row justify-between items-center py-4'>
             <TouchableOpacity
-              onPress={() => setModalVisible(true)}
+              onPress={() => handleUpdate()}
               className='mx-4'
             >
-              {/* <Text className="text-lg">Update Journal</Text> */}
               <AntDesign name="edit" size={24} color="green" />
             </TouchableOpacity>
           
             <ConfirmDeleteModal id={journalData?.id} />
           </View>
-
 
       </View>
 
@@ -90,7 +85,7 @@ const JournalDetailScreen: React.FC<JournalDetailScreenProps> = ({ route }) => {
 
 
       {/* Modal for Update */}
-      <Modal
+      {/* <Modal
         visible={modalVisible}
         transparent={true}
         animationType="slide"
@@ -155,7 +150,15 @@ const JournalDetailScreen: React.FC<JournalDetailScreenProps> = ({ route }) => {
             </Formik>
           </View>
         </KeyboardAvoidingView>
-      </Modal>
+      </Modal> */}
+
+
+
+
+
+
+
+
     </ScrollView>
   );
 };

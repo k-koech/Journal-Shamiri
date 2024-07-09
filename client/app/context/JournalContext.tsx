@@ -90,8 +90,9 @@ export const JournalProvider: React.FC<{ children: ReactNode }> = ({ children })
 
   
 
-  // Function to edit a journal entry
+  // Function to edit a journal
   const updateJournal = (entryId: number, data: Partial<JournalEntry>) => {
+    
     fetch(`${server_url}/journal-entry/${entryId}`, {
       method: 'PUT',
       headers: {
@@ -105,6 +106,7 @@ export const JournalProvider: React.FC<{ children: ReactNode }> = ({ children })
         if(response.success){
             Toast.success('Journal updated successfully');
             setOnJournalChange(!onJournalChange);
+            navigation.navigate('JournalDetail', { id: entryId });
         }
         else if(response.error){
             Toast.error(response.error, 'top');

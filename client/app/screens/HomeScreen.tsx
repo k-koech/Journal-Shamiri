@@ -1,13 +1,12 @@
-import { View,Button, Text,StatusBar, ScrollView, SafeAreaView, TextInput, TouchableOpacity, Touchable, Image, RefreshControl, StyleSheet } from 'react-native'
-import React,{useContext, useEffect, useState} from 'react'
+import { View, Text,StatusBar, ScrollView, SafeAreaView, TextInput, TouchableOpacity, Touchable, Image, RefreshControl, StyleSheet } from 'react-native'
+import React,{useEffect, useState} from 'react'
 import { AntDesign, Ionicons } from '@expo/vector-icons'
 import { LinearGradient } from 'expo-linear-gradient';
 import { useAuthContext } from '../context/AuthContext';
 import { server_url } from '../../config.json';
-import { JournalContext, useJournalContext } from '../context/JournalContext';
+import { useJournalContext } from '../context/JournalContext';
 import Spinner from '../components/Spinner';
 import { SwipeListView } from 'react-native-swipe-list-view';
-import { Modal } from 'react-native';
 import { ConfirmDeleteModal } from '../components/ConfirmDeleteModal';
 
 export default function HomeScreen({ navigation }: { navigation: any })
@@ -96,7 +95,6 @@ export default function HomeScreen({ navigation }: { navigation: any })
             <Text className={` ${clickedCategory==category ? "text-white":"" } px-1.5`}>{category}</Text>
           </TouchableOpacity>
         ))}
-
       </View>
 
 
@@ -107,7 +105,7 @@ export default function HomeScreen({ navigation }: { navigation: any })
           <View>
 
             {
-              journals.length === 0 ?
+              filteredJournals?.length === 0 ?
               <View className='flex justify-center items-center mt-6'>
                 <Text className='text-xl text-gray-500'>No Journals Yet</Text>
                 <TouchableOpacity onPress={() => navigation.navigate("Add Journal") } className='bg-[#026D87] p-2 rounded-lg'>
@@ -127,8 +125,8 @@ export default function HomeScreen({ navigation }: { navigation: any })
             :
             
             <SwipeListView
-            data={journals}
-            renderItem={( { item: journal } ) => (
+            data={filteredJournals}
+            renderItem={( { item: journal }: { item: any } ) => (
                 <TouchableOpacity   onPress={() => onNavigateToJournalDetailScreen(journal.id) } className='flex min-h-[10vh] flex-row justify-between jhitems-center border bg-gray-50 border-gray-300 rounded-lg mb-4'>
                 <View className='w-[20%] jh-full rounded-lg bg-[#026D87] flex justify-center items-center'>
                   <Text className='text-white text-xl font-bold uppercase'>{journal?.title[0]}</Text>
@@ -136,10 +134,22 @@ export default function HomeScreen({ navigation }: { navigation: any })
     
               <View className='flex-1 flex-row justify-between '>                  
                 <View className='px-2 flex-1'>
-                  <Text className='text-xl'>{journal?.title}</Text>
-                  <Text className='flex-1'>
-                    {journal?.content?.length > 25 ? journal?.content.slice(0, 25) + '...': journal?.content}
+                  <Text className='text-xl'>
+                    {journal?.title.length > 20? journal?.title.slice(0, 25) + '...': journal?.title }
                   </Text>
+                  <Text className='flex-1'>
+                  {
+                      journal?.content
+                        ? journal.content.includes('\n')
+                          ? journal.content.split('\n')[0].length > 25
+                            ? journal.content.split('\n')[0].slice(0, 25) + '...'
+                            : journal.content.split('\n')[0]
+                          : journal.content.length > 25
+                          ? journal.content.slice(0, 25) + '...'
+                          : journal.content
+                        : ''
+                    }                  
+                    </Text>
                   <View className='flex w-full flex-row items-center justify-between mb-1'>
                     <Text className='text-sm text-white bg-[#026D87] rounded-sm px-1.5'>{journal?.category}</Text>                    
                     <Text className='text-sm text-gray-700'>{journal?.date}</Text>
@@ -178,49 +188,3 @@ export default function HomeScreen({ navigation }: { navigation: any })
 </SafeAreaView>
   )
 }
-
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-  },
-  rowFront: {
-    alignItems: 'center',
-    backgroundColor: '#CCC',
-    borderBottomColor: 'black',
-    borderBottomWidth: 1,
-    justifyContent: 'center',
-    height: 50,
-  },
-  rowBack: {
-    alignItems: 'center',
-    backgroundColor: '#DDD',
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingLeft: 15,
-  },
-  backRightBtn: {
-    alignItems: 'center',
-    bottom: 0,
-    justifyContent: 'center',
-    position: 'absolute',
-    top: 0,
-    width: 75,
-  },
-  backRightBtnLeft: {
-    backgroundColor: 'blue',
-    right: 75,
-  },
-  backRightBtnRight: {
-    backgroundColor: 'red',
-    right: 0,
-  },
-  backTextWhite: {
-    color: '#FFF',
-  },
-});
-
-
-

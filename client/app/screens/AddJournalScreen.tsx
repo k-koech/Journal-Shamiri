@@ -1,120 +1,129 @@
-import React, { useContext, useState } from 'react';
-import { View, Text, TextInput, Button, TouchableOpacity, Alert, Platform, KeyboardAvoidingView, StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, Platform, KeyboardAvoidingView } from 'react-native';
 import { Formik } from 'formik';
-import {Ionicons} from '@expo/vector-icons';
-import { useNavigation } from 'expo-router';
-import { JournalContext, useJournalContext } from '../context/JournalContext';
+import { Ionicons } from '@expo/vector-icons';
+import { useNavigation, RouteProp } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '../context/types';
+import { useJournalContext } from '../context/JournalContext';
 import { Toast } from 'toastify-react-native';
 
-const AddJournalScreen: React.FC = () => {
-    const {createJournal} = useJournalContext();
-    const navigation = useNavigation();
+interface AddJournalScreenProps {
+  route: RouteProp<RootStackParamList, 'AddJournal'>;
+}
 
-  // Initial form values
+const AddJournalScreen: React.FC<AddJournalScreenProps> = ({ route }) => 
+{
+  // const [initialValues, setInitialValues] = useState<any>()
+
+  const { createJournal, updateJournal } = useJournalContext();
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+
+  const journal = route.params?.journal;
+  const isUpdate = !!journal;
+
   const initialValues = {
-    title: '',
-    content: '',
-    category: 'Personal',
+    title: journal?.title || '',
+    content: journal?.content || '',
+    category: journal?.category || 'Personal',
   };
 
-  // Function to handle form submission
   const handleSubmit = (values: any) => {
-
-    if (values.title.length < 4) {
-      Toast.error('Title should be at least 4 characters long.', 'top');
+    if (values.title.length < 4 || values.title.length>35) {
+      Toast.error('Title should be atleast 4 and atmost 35 characters long.', 'top');
       return;
     }
     if (values.content.length < 10) {
       Toast.error('Content should be at least 10 characters long.', 'top');
       return;
     }
-    console.log(values.category);
-    
-    
-    createJournal(values);
 
-     
-    
-    
+    if (isUpdate && journal) {
+      console.log(values);
+      const id = parseInt(journal.id);
+      updateJournal(id , { ...values });
+    } else {
+      createJournal(values);
+    }
+
+    navigation.goBack(); // Navigate back after the action
   };
 
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      className='flex-1 bg-gray-100 p-4 pb-16'
+      style={{ flex: 1, backgroundColor: '#f5f5f5', padding: 16, paddingBottom: 32 }}
     >
-
       <TouchableOpacity
         onPress={() => navigation.goBack()}
-        className='absolute top-4 left-4'
+        style={{ position: 'absolute', top: 16, left: 16 }}
       >
         <Ionicons name="chevron-back" size={28} color="black" />
       </TouchableOpacity>
 
-     <View className='flex-1 justify-center '>
-        <Text className='text-2xl font-bold text-gray-800 text-center mb-4'>
-            Add Journal
+      <View style={{ flex: 1, justifyContent: 'center' }}>
+        <Text style={{ fontSize: 24, fontWeight: 'bold', textAlign: 'center', marginBottom: 16 }}>
+          {isUpdate ? 'Update Journal' : 'Add Journal'}
         </Text>
-      <Formik
-        initialValues={initialValues}
-        onSubmit={handleSubmit}
-      >
-        {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
-          <View className='bg-white p-6 rounded-lg shadow-lg'>
-            <TextInput
-              className={`border border-gray-300 p-2 mb-4 rounded-lg  ${touched.title && errors.title ? "border border-red-900" : {}
-              }`}
-              placeholder="Title"
-              onChangeText={handleChange('title')}
-              onBlur={handleBlur('title')}
-              value={values.title}
-            />
-            {touched.title && errors.title && (
-              <Text className='text-red-500 mb-2'>{errors.title}</Text>
-            )}
+        <Formik
+          initialValues={initialValues}
+          onSubmit={handleSubmit}
+          enableReinitialize={true} 
+        >
+          {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
+            <View style={{ backgroundColor: '#fff', padding: 24, borderRadius: 8, shadowColor: '#000', shadowOpacity: 0.1, shadowRadius: 8, shadowOffset: { width: 0, height: 2 } }}>
+              <TextInput
+                style={{ borderColor: touched.title && errors.title ? 'red' : '#ccc', borderWidth: 1, padding: 8, marginBottom: 16, borderRadius: 8 }}
+                placeholder="Title"
+                onChangeText={handleChange('title')}
+                onBlur={handleBlur('title')}
+                value={values.title}
+              />
+              {touched.title && errors.title && (
+                <Text style={{ color: 'red', marginBottom: 8 }}>{errors.title}</Text>
+              )}
 
-            <TextInput
-                className={`border border-gray-300 p-2 mb-4 rounded-lg ${touched.content && errors.content ? "border border-red-600" : {} }`}
-              placeholder="Content"
-              onChangeText={handleChange('content')}
-              onBlur={handleBlur('content')}
-              value={values.content}
-              multiline
-              numberOfLines={4}
-            />
-            {touched.content && errors.content && (
-              <Text className='text-red-500 mb-2' >{errors.content}</Text>
-            )}
+              <TextInput
+                style={{ borderColor: touched.content && errors.content ? 'red' : '#ccc', borderWidth: 1, padding: 8, marginBottom: 16, borderRadius: 8, textAlignVertical: 'top' }}
+                placeholder="Content"
+                onChangeText={handleChange('content')}
+                onBlur={handleBlur('content')}
+                value={values.content}
+                multiline
+                numberOfLines={4}
+              />
+              {touched.content && errors.content && (
+                <Text style={{ color: 'red', marginBottom: 8 }}>{errors.content}</Text>
+              )}
 
-            <View className='mb-4' >
-              <Text className= 'text-gray-600 mb-2' >Category</Text>
-              <View className='flex-row justify-between' >
-                {['Personal', 'Work', 'Travel', 'Other'].map((category) => (
-                  <TouchableOpacity
-                    key={category}
-                    onPress={() => handleChange('category')(category)}
-                    className={`p-2 rounded-lg border ${values.category === category? 'bg-[#026D87] border-[#026D87': 'bg-white border-gray-300'} `}
-                  >
-                    <Text
-                      className={`text-center ${values.category === category ? 'text-white' : 'text-gray-800' }
-                      `}
+              <View style={{ marginBottom: 16 }}>
+                <Text style={{ color: '#666', marginBottom: 8 }}>Category</Text>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                  {['Personal', 'Work', 'Travel', 'Other'].map((category) => (
+                    <TouchableOpacity
+                      key={category}
+                      onPress={() => handleChange('category')(category)}
+                      style={{
+                        padding: 8,
+                        borderRadius: 8,
+                        borderWidth: 1,
+                        borderColor: values.category === category ? '#026D87' : '#ccc',
+                        backgroundColor: values.category === category ? '#026D87' : '#fff',
+                      }}
                     >
-                      {category}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
+                      <Text style={{ textAlign: 'center', color: values.category === category ? '#fff' : '#000' }}>{category}</Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
               </View>
+
+              <TouchableOpacity onPress={() => handleSubmit()} style={{ backgroundColor: '#009FC6', padding: 16, borderRadius: 12 }}>
+                <Text style={{ color: '#fff', textAlign: 'center', fontWeight: 'bold' }}>{isUpdate ? 'Update' : 'Submit'}</Text>
+              </TouchableOpacity>
             </View>
-
-            <TouchableOpacity className='bg-[#009FC6] p-4 rounded-xl' onPress={() => handleSubmit()}>
-              <Text className='text-white text-center'>Submit</Text>
-            </TouchableOpacity>
-            
-          </View>
-        )}
-      </Formik>
+          )}
+        </Formik>
       </View>
-
     </KeyboardAvoidingView>
   );
 };
