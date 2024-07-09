@@ -26,13 +26,18 @@ export default function HomeScreen({ navigation }: { navigation: any })
 
   const handleCategoryPress = (category: string) => {
     setClickedCategory(category)
+
+     const filtered_journals = category==="All"? journals : journals.filter((journal: any) => journal.category === category)
+     setFilteredJournals(filtered_journals)
     
   }
   useEffect(() => {
     setClickedCategory('All')
 
+    setFilteredJournals(journals)
 
-  }, [onChange])
+
+  }, [journals])
 
   
   return ( 
@@ -107,10 +112,17 @@ export default function HomeScreen({ navigation }: { navigation: any })
             }
 
             <View>
-            { journals && journals.map && journals.map((journal: any) => (
+            { 
+            filteredJournals && filteredJournals.length === 0 ?
+            <View className='flex justify-center items-center mt-6'>
+              <Text className='text-gray-500'>No Journals Found in this category</Text>
+            </View>
+            :
+            
+            filteredJournals && filteredJournals.map && filteredJournals.map((journal: any) => (
               <TouchableOpacity onPress={() => navigation.navigate("JournalDetail") } className='flex min-h-[10vh] flex-row justify-between jhitems-center border border-gray-300 rounded-lg mb-4'>
                   <View className='w-[20%] jh-full rounded-lg bg-[#026D87] flex justify-center items-center'>
-                    <Text className='text-white text-2xl font-bold uppercase'>{journal?.title[0]}</Text>
+                    <Text className='text-white text-xl font-bold uppercase'>{journal?.title[0]}</Text>
                   </View>
 
                 <View className='flex-1 flex-row justify-between '>                  
@@ -130,6 +142,7 @@ export default function HomeScreen({ navigation }: { navigation: any })
                 </View>
               </TouchableOpacity>
             ))}
+              
               
             </View>
           </View>
