@@ -13,12 +13,17 @@ import { AuthProvider, useAuthContext } from './context/AuthContext';
 import { JournalProvider } from './context/JournalContext';
 import { RootStackParamList } from './context/types';
 import AddJournalScreen from './screens/AddJournalScreen';
+  import { LogBox } from 'react-native';
 
 // const Stack = createStackNavigator();
 const Stack = createStackNavigator<RootStackParamList>();
 
 
 export default function index() {
+
+  useEffect(() => {
+      LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
+  }, [])
 
   const [isLoaded, setIsFontLoaded] = useState<Boolean>(false)
   const [loaded, error] = useFonts({

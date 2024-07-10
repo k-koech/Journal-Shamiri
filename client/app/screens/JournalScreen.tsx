@@ -24,21 +24,27 @@ const JournalPage: React.FC<{ navigation: any }> = ({ navigation }) => {
     loadMoreJournals();
   }, [filteredJournals, page]);
 
+
+
   const filterJournals = () => {
     const now = new Date();
     let filtered = journals;
-
+  
     // Filter based on period
     if (selectedPeriod === 'daily') {
       filtered = journals.filter(journal => new Date(journal.date).toDateString() === now.toDateString());
     } else if (selectedPeriod === 'weekly') {
-      const startOfWeek = new Date(now.setDate(now.getDate() - now.getDay()));
-      filtered = journals.filter(journal => new Date(journal.date) >= startOfWeek);
+      const weekOfYear = getWeekNumber(now);
+      filtered = journals.filter(journal => getWeekNumber(new Date(journal.date)) === weekOfYear);
     } else if (selectedPeriod === 'monthly') {
-      const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-      filtered = journals.filter(journal => new Date(journal.date) >= startOfMonth);
+      const monthOfYear = now.getMonth();
+      const year = now.getFullYear();
+      filtered = journals.filter(journal => {
+        const journalDate = new Date(journal.date);
+        return journalDate.getMonth() === monthOfYear && journalDate.getFullYear() === year;
+      });
     }
-
+  
     // Filter based on search query
     if (searchQuery) {
       filtered = filtered.filter(journal =>
@@ -46,11 +52,23 @@ const JournalPage: React.FC<{ navigation: any }> = ({ navigation }) => {
         journal.content.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
-
+  
     setFilteredJournals(filtered);
     setPage(1);  // Reset page when filters change
     setDisplayedJournals(filtered.slice(0, recordsPerPage));
   };
+
+
+  
+  
+  // Function to get the week number of the year
+  const getWeekNumber = (date: Date): number => {
+    const oneJan = new Date(date.getFullYear(), 0, 1);
+    const numberOfDays = Math.floor((date.getTime() - oneJan.getTime()) / (24 * 60 * 60 * 1000));
+    return Math.ceil((date.getDay() + 1 + numberOfDays) / 7);
+  };
+  
+
 
   const loadMoreJournals = () => {
     const nextPageRecords = filteredJournals.slice(page * recordsPerPage, (page + 1) * recordsPerPage);
@@ -63,6 +81,17 @@ const JournalPage: React.FC<{ navigation: any }> = ({ navigation }) => {
 
   return (
     <ScrollView className="flex-1 p-4 bg-gray-100">
+            {
+              journals?.length === 0 ?
+              <View className='flex justify-center items-center my-16 '>
+                <Text className='text-xl text-gray-500'>No Journals Yet</Text>
+                <TouchableOpacity onPress={() => navigation.navigate("Add Journal") } className='bg-[#026D87] p-2 rounded-lg'>
+                  <Text className='text-white'>Create Journal</Text>
+                </TouchableOpacity>
+              </View>
+              :
+           
+     <View>
       <TouchableOpacity
         onPress={() => nav.goBack()}
         className="absolute top-4 p-2"
@@ -117,6 +146,10 @@ const JournalPage: React.FC<{ navigation: any }> = ({ navigation }) => {
           <Text className="text-white text-center">Load More</Text>
         </TouchableOpacity>
       )}
+
+
+    </View>
+    }
     </ScrollView>
   );
 };

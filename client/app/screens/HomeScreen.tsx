@@ -42,9 +42,6 @@ export default function HomeScreen({ navigation }: { navigation: any })
   }, [journals])
 
   const onNavigateToJournalDetailScreen = (journalId: number) => {
-    console.log('====================================');
-    console.log('journalId ', journalId);
-    console.log('====================================');
       navigation.navigate('JournalDetail', { id: journalId });
   }
 
@@ -107,7 +104,7 @@ export default function HomeScreen({ navigation }: { navigation: any })
           <View>
 
             {
-              filteredJournals?.length === 0 ?
+              journals?.length === 0 ?
               <View className='flex justify-center items-center mt-6'>
                 <Text className='text-xl text-gray-500'>No Journals Yet</Text>
                 <TouchableOpacity onPress={() => navigation.navigate("Add Journal") } className='bg-[#026D87] p-2 rounded-lg'>

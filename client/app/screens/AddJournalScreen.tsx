@@ -27,7 +27,6 @@ const AddJournalScreen: React.FC<AddJournalScreenProps> = ({ route }) =>
     category: 'Personal',
   });
 
-  console.log(isUpdate? 'Updating' : 'Adding')
 
 
   useEffect(() => {
