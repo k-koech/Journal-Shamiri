@@ -77,7 +77,7 @@ export default function HomeScreen({ navigation }: { navigation: any })
       </View>
 
       <TouchableOpacity  onPress={() => navigation.navigate('Journal')} className='flex flex-row items-center justify-between rounded-lg mt-4'>
-        <Text className='text-lg'>Filter Journals by Date</Text>
+        <Text className='text-lg'>Summary of Journals</Text>
         <View
           className='w-[13%] xbg-blue-500 p-2 rounded-lg justify-center items-center'
         >

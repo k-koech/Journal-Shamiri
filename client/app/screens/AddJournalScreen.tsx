@@ -49,17 +49,8 @@ const AddJournalScreen: React.FC<AddJournalScreenProps> = ({ route }) =>
     }
 
 
-    const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackPress);
 
-    return () => backHandler.remove();
   }, [journal]);
-
-  const handleBackPress = () => {
-    setIsUpdate(false);
-    setInitialValues({ title: '', content: '', category: 'Personal' });
-    navigation.goBack();
-    return true;
-  };
 
 
 
@@ -94,10 +85,11 @@ const AddJournalScreen: React.FC<AddJournalScreenProps> = ({ route }) =>
 
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={{ flex: 1, backgroundColor: '#f5f5f5', padding: 16, paddingBottom: 32 }}
-    >
+    // <KeyboardAvoidingView
+    //   behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    //   style={{ flex: 1, backgroundColor: '#f5f5f5', padding: 16, paddingBottom: 32 }}
+    // >
+    <View className='flex-1'>
       <TouchableOpacity
         onPress={() => {navigation.goBack(), setIsUpdate(false), setInitialValues({title: '', content: '',category: 'Personal', })} }
         style={{ position: 'absolute', top: 16, left: 16 }}
@@ -134,7 +126,7 @@ const AddJournalScreen: React.FC<AddJournalScreenProps> = ({ route }) =>
                 onBlur={handleBlur('content')}
                 value={values.content}
                 multiline
-                numberOfLines={4}
+                numberOfLines={8}
               />
               {touched.content && errors.content && (
                 <Text style={{ color: 'red', marginBottom: 8 }}>{errors.content}</Text>
@@ -168,7 +160,7 @@ const AddJournalScreen: React.FC<AddJournalScreenProps> = ({ route }) =>
           )}
         </Formik>
       </View>
-    </KeyboardAvoidingView>
+      </View>
   );
 };
 

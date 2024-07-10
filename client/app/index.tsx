@@ -8,7 +8,7 @@ import TabNavigations from './navigations/TabNavigations';
 import { useFonts } from 'expo-font';
 import Spinner from './components/Spinner';
 import ToastManager from 'toastify-react-native';
-import { View } from 'react-native';
+import { BackHandler, View } from 'react-native';
 import { AuthProvider, useAuthContext } from './context/AuthContext';
 import { JournalProvider } from './context/JournalContext';
 import { RootStackParamList } from './context/types';
@@ -38,6 +38,8 @@ export default function index() {
     if (loaded || error) {
       setIsFontLoaded(true);
     }
+
+    
   }, [loaded, error]);
 
   if (!loaded && !error) {
@@ -53,7 +55,7 @@ export default function index() {
 
   return (
     <View className="flex-1 bg-white">
-    <NavigationContainer independent={true}>      
+    <NavigationContainer independent={true}>     
       <AuthProvider>
         <JournalProvider>
               <App />

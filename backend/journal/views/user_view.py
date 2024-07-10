@@ -58,9 +58,9 @@ def logout(request):
         refresh_token = request.data.get("refresh")
         token = RefreshToken(refresh_token)
         token.blacklist()
-        # for token in OutstandingToken.objects.filter(user=request.user):
-        #     BlacklistedToken.objects.get_or_create(token=token)
-        return JsonResponse( {"success":"Logout success!"} ,status=status.HTTP_205_RESET_CONTENT)
+        for token in OutstandingToken.objects.filter(user=request.user):
+            BlacklistedToken.objects.get_or_create(token=token)
+        return JsonResponse( {"success":"Logout success!"} ,status=200 )
    
 
 # Update User
