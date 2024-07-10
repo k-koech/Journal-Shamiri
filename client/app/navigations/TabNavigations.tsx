@@ -39,7 +39,7 @@ export default function TabNavigations() {
 
     }}
     />
-    <Tab.Screen name="AddJournal" component={AddJournalScreen} 
+    {/* <Tab.Screen name="AddJournal" component={AddJournalScreen} 
                options={{
                 headerShown: false,
                 tabBarIcon: ({ focused }) => (
@@ -47,9 +47,25 @@ export default function TabNavigations() {
                     <Ionicons name="add-circle-outline" size={24} color={focused ? "#026D87" : "#009FC6"} />
                     <Text style={{ color: focused ? "#026D87" : "#009FC6" }}>Add Journal</Text>
                   </View>
-                )
+                ),
         
             }}
+    /> */}
+    <Tab.Screen 
+      name="AddJournal"
+      component={AddJournalScreen}
+      options={({ navigation, route }) => ({
+        headerShown: false,
+        tabBarIcon: ({ focused }) => (
+          <View className="flex items-center justify-center">
+            <Ionicons name="add-circle-outline" size={24} color={focused ? "#026D87" : "#009FC6"} />
+            <Text style={{ color: focused ? "#026D87" : "#009FC6" }}>Add Journal</Text>
+          </View>
+        ),
+        tabPress: () => {
+          navigation.navigate('AddJournal', { journal: null });
+        },
+      })}
     />
     <Tab.Screen name="Profile" component={ProfileScreen} 
            options={{

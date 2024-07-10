@@ -30,6 +30,7 @@ export type JournalDetailScreenProps = {
 
 
 const JournalDetailScreen: React.FC<JournalDetailScreenProps> = ({ route, navigation }) => {
+  const nav = useNavigation<StackNavigationProp<RootStackParamList>>();
   const {journals} = useJournalContext()
   const [journalData, setJournalData] = useState<any>(null);
 
@@ -45,6 +46,8 @@ const JournalDetailScreen: React.FC<JournalDetailScreenProps> = ({ route, naviga
 
   function handleUpdate(){
     navigation.navigate('AddJournal', { journal: journalData }); 
+    console.log(journalData, '====================================');
+    
   }
 
   return (
@@ -53,7 +56,7 @@ const JournalDetailScreen: React.FC<JournalDetailScreenProps> = ({ route, naviga
       {/* Journal Details */}
       <View className="mt-8 mb-4  bg-[#026D87] rounded-t-[20px] shadow-md min-h-[90vh]">
           <TouchableOpacity
-            onPress={() => navigation.goBack()}
+            onPress={() => navigation.navigate("Home")}
             className="absolute top-4 left-4 p-2"
           >
             <Ionicons name="chevron-back" size={28} color="white" />

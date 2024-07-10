@@ -42,6 +42,9 @@ export default function HomeScreen({ navigation }: { navigation: any })
   }, [journals])
 
   const onNavigateToJournalDetailScreen = (journalId: number) => {
+    console.log('====================================');
+    console.log('journalId ', journalId);
+    console.log('====================================');
       navigation.navigate('JournalDetail', { id: journalId });
   }
 

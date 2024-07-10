@@ -9,9 +9,10 @@ export interface User {
 
   // for navigation to update/reuse the add journal form
 export type RootStackParamList = {
+  Home: undefined;
   JournalList: undefined; 
   AddJournal: { journal?: { id: string; title: string; content: string; category: string } }; // Define `journal` parameter as optional
-  JournalDetail: { id: string };
+  JournalDetail: { id: any };
   Summary: any;
   Auth: undefined;
   Journal: undefined;

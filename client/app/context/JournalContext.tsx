@@ -4,6 +4,7 @@ import { AuthContext, useAuthContext } from './AuthContext';
 import { Toast } from 'toastify-react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from './types';
 
 // Define the Journal  type
 export type JournalEntry = {
@@ -34,29 +35,27 @@ interface JournalContextType {
 
   onJournalChange: boolean;
  setOnJournalChange: (value: boolean) => void;
+ isUpdate: boolean;
+ setIsUpdate: (value: boolean) => void;
 }
 
-export type RootStackParamList = {
-  Home: undefined;
-};
 
-// type HomeScreenNavigationProp = StackNavigationProp<
-//   RootStackParamList,
-//   'Home'
-// >;
+
+type JournalDetailScreenNavigationProp = StackNavigationProp<RootStackParamList, 'JournalDetail'>;
+
 interface JournalProviderProps {
   children: ReactNode;
-  navigation: any;
 }
 
 export const JournalContext = createContext<JournalContextType | undefined>(undefined);
 
 
-export const JournalProvider: React.FC<JournalProviderProps> = ({ children, navigation }) => {
+export const JournalProvider: React.FC<JournalProviderProps> = ({ children }) => {
 
-// export const JournalProvider: React.FC<{ children: ReactNode }> = ({ children}) => {
 
-  const nav =useNavigation();
+  const navigation = useNavigation<JournalDetailScreenNavigationProp>();  
+  const [isUpdate, setIsUpdate] = useState<boolean>(false);
+
 
   const [journals, setJournals] = useState<JournalEntry[]>([]);
 
@@ -111,7 +110,10 @@ export const JournalProvider: React.FC<JournalProviderProps> = ({ children, navi
         if(response.success){
             Toast.success('Journal updated successfully');
             setOnJournalChange(!onJournalChange);
-            navigation.navigate('JournalDetail', { id: entryId });
+
+            setIsUpdate(false);
+            navigation.navigate('JournalDetail', { id:  entryId });
+
         }
         else if(response.error){
             Toast.error(response.error, 'top');
@@ -174,7 +176,7 @@ export const JournalProvider: React.FC<JournalProviderProps> = ({ children, navi
 
       }, [token_pair, onJournalChange]);
 
-
+      
 
   return (
     <JournalContext.Provider
@@ -186,6 +188,10 @@ export const JournalProvider: React.FC<JournalProviderProps> = ({ children, navi
 
         onJournalChange,
         setOnJournalChange,
+
+
+        setIsUpdate,
+        isUpdate,
 
       }}
     >

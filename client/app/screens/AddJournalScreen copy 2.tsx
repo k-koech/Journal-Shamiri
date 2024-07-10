@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Platform, KeyboardAvoidingView, BackHandler } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Platform, KeyboardAvoidingView } from 'react-native';
 import { Formik } from 'formik';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, RouteProp } from '@react-navigation/native';
@@ -14,59 +14,25 @@ interface AddJournalScreenProps {
 
 const AddJournalScreen: React.FC<AddJournalScreenProps> = ({ route }) => 
 {
+  // const [initialValues, setInitialValues] = useState<any>()
+
   const { createJournal, updateJournal } = useJournalContext();
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const journal = route.params?.journal;  
-  const [isUpdate, setIsUpdate] = useState<boolean>(()=> journal ? true : false);
+  const [isUpdate, setIsUpdate] = useState<boolean>(!!journal);
 
-  const [test, setTest] = useState(false);
+  // const isUpdate = !!journal;
+  
 
-  const [initialValues, setInitialValues ] = useState({
-    title: '',
-    content: '',
-    category: 'Personal',
-  });
-
-  console.log(isUpdate? 'Updating' : 'Adding')
-
-
-  useEffect(() => {
-    if (journal) {
-      setInitialValues({
-        title: journal.title,
-        content: journal.content,
-        category: journal.category,
-      });
-      setIsUpdate(true);
-      setTest(true);
-    } else {
-      setInitialValues({
-        title: '',
-        content: '',
-        category: 'Personal',
-      });
-      setTest(false);
-      setIsUpdate(false);
-    }
-
-
-    const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackPress);
-
-    return () => backHandler.remove();
-  }, [journal]);
-
-  const handleBackPress = () => {
-    setIsUpdate(false);
-    setInitialValues({ title: '', content: '', category: 'Personal' });
-    navigation.goBack();
-    return true;
-  };
-
-
+  const [initialValues,setInitialValues ] = useState({
+    title: journal?.title || '',
+    content: journal?.content || '',
+    category: journal?.category || 'Personal',
+  })
 
   const handleSubmit = (values: any) => {
-    if (values.title.length < 4 || values.title.length > 35) {
-      Toast.error('Title should be at least 4 and at most 35 characters long.', 'top');
+    if (values.title.length < 4 || values.title.length>35) {
+      Toast.error('Title should be atleast 4 and atmost 35 characters long.', 'top');
       return;
     }
     if (values.content.length < 10) {
@@ -75,25 +41,21 @@ const AddJournalScreen: React.FC<AddJournalScreenProps> = ({ route }) =>
     }
 
     if (isUpdate && journal) {
+
       const id = parseInt(journal.id);
-      updateJournal(id, { ...values });
-      setInitialValues({
+      updateJournal(id , { ...values });
+      const initialValues = {
         title: '',
-        content: '',
-        category: 'Personal',
-      });
-      setTest(false);
-      setIsUpdate(false);
-
-    } else {
+        content:  '',
+        category:  'Personal',
+      };
+    } 
+    else {
       createJournal(values);
-
     }
-    
-    // navigation.navigate('Home');  navigation.goBack(); 
-  };
-    
 
+    navigation.goBack(); // Navigate back after the action
+  };
 
   return (
     <KeyboardAvoidingView
@@ -101,7 +63,7 @@ const AddJournalScreen: React.FC<AddJournalScreenProps> = ({ route }) =>
       style={{ flex: 1, backgroundColor: '#f5f5f5', padding: 16, paddingBottom: 32 }}
     >
       <TouchableOpacity
-        onPress={() => {navigation.goBack(), setIsUpdate(false), setInitialValues({title: '', content: '',category: 'Personal', })} }
+        onPress={() => navigation.goBack()}
         style={{ position: 'absolute', top: 16, left: 16 }}
       >
         <Ionicons name="chevron-back" size={28} color="black" />
@@ -114,7 +76,7 @@ const AddJournalScreen: React.FC<AddJournalScreenProps> = ({ route }) =>
         <Formik
           initialValues={initialValues}
           onSubmit={handleSubmit}
-          enableReinitialize={true}
+          enableReinitialize={true} 
         >
           {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
             <View style={{ backgroundColor: '#fff', padding: 24, borderRadius: 8, shadowColor: '#000', shadowOpacity: 0.1, shadowRadius: 8, shadowOffset: { width: 0, height: 2 } }}>

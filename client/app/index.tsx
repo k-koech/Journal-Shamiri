@@ -13,6 +13,7 @@ import { View } from 'react-native';
 import { AuthProvider, useAuthContext } from './context/AuthContext';
 import { JournalProvider } from './context/JournalContext';
 import { RootStackParamList } from './context/types';
+import AddJournalScreen from './screens/AddJournalScreen';
 
 // const Stack = createStackNavigator();
 const Stack = createStackNavigator<RootStackParamList>();
@@ -74,6 +75,7 @@ function App() {
               <Stack.Screen name="tabs" component={TabNavigations}   options={{headerShown: false}} />
               <Stack.Screen name="Journal" component={JournalScreen} options={{headerShown: false }}/> 
               <Stack.Screen name="JournalDetail" component={JournalDetailScreen} options={{headerShown: false}} />
+              {/* <Stack.Screen name="AddJournal" component={AddJournalScreen} options={{headerShown: false}} /> */}
               <Stack.Screen name="Summary" component={SummaryScreen} /> 
             </>
           ) : (
