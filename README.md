@@ -1,4 +1,4 @@
-# KKBlog
+# Journal Application
 #### Personal Journaling App, 10/07/2023
 #### **By Kelvin Kipchumba**
 ## Project Description
