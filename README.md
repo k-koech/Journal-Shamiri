@@ -99,6 +99,7 @@ A user;
 ##### Summary Screen
 - A user can filter by dates, search by title , content and also based on daily, weekly and also Monthly 
 <img src="images/summary1.jpeg" width="48">
+<a href="url"><img src="images/summary1.jpeg" align="left" height="48" width="48" ></a>
 
 ![Summary page 1](images/summary1.jpeg)
 ![Summary page 2](images/summary2.jpeg)
