@@ -40,18 +40,23 @@ export type RootStackParamList = {
   Home: undefined;
 };
 
-type HomeScreenNavigationProp = StackNavigationProp<
-  RootStackParamList,
-  'Home'
->;
+// type HomeScreenNavigationProp = StackNavigationProp<
+//   RootStackParamList,
+//   'Home'
+// >;
+interface JournalProviderProps {
+  children: ReactNode;
+  navigation: any;
+}
 
 export const JournalContext = createContext<JournalContextType | undefined>(undefined);
 
 
+export const JournalProvider: React.FC<JournalProviderProps> = ({ children, navigation }) => {
 
-export const JournalProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+// export const JournalProvider: React.FC<{ children: ReactNode }> = ({ children}) => {
 
-  const navigation =useNavigation<HomeScreenNavigationProp>();
+  const nav =useNavigation();
 
   const [journals, setJournals] = useState<JournalEntry[]>([]);
 
@@ -116,7 +121,6 @@ export const JournalProvider: React.FC<{ children: ReactNode }> = ({ children })
         }
        
     })
-    .catch(error => Toast.error('Error editing journal entry:', "top"));
   };
 
 
@@ -170,8 +174,7 @@ export const JournalProvider: React.FC<{ children: ReactNode }> = ({ children })
 
       }, [token_pair, onJournalChange]);
 
-      console.log("ppppppp xx ", journals);
-      
+
 
   return (
     <JournalContext.Provider
