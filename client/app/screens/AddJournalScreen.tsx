@@ -90,7 +90,6 @@ const AddJournalScreen: React.FC<AddJournalScreenProps> = ({ route }) =>
 
     }
     
-    // navigation.navigate('Home');  navigation.goBack(); 
   };
     
 

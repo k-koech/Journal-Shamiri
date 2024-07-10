@@ -4,7 +4,6 @@ import { createStackNavigator } from '@react-navigation/stack';
 import AuthScreen from './screens/AuthScreen';
 import JournalScreen from './screens/JournalScreen';
 import JournalDetailScreen from './screens/JournalDetailScreen';
-import SummaryScreen from './screens/SummaryScreen';
 import TabNavigations from './navigations/TabNavigations';
 import { useFonts } from 'expo-font';
 import Spinner from './components/Spinner';
