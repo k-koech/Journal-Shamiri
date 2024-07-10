@@ -19,9 +19,11 @@
 - Run ```python manage.py runserver 0.0.0.0:8000``` in the terminal to strt your server.
 - Go to your main terminal na run  ```ifconfig``` for linux OR ```ipconfig``` and find your network address i.e somewhere near ``inet`` in the data that popped up i.e for me it is ``192.168.100.6``. Now copy this and add the 8000 as the port number and make a url like this i.e ```http://192.168.100.6:8000/api```
 - Copy this url and navigate to the client folder- then config.json and replace the server url there to this url i.e to
-    ```{
+    ```
+    {
     "server_url": "http://192.168.100.6:8000/api"
-    } ```
+    } 
+    ```
 - And the backend is ready 
 
 
