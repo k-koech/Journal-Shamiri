@@ -24,6 +24,12 @@ A user;
 - search for a journal in summary page
 - Categorize his.her own journals
 
+
+## Project Documentation
+ - [Project Documentation](https://docs.google.com/document/d/1XNv-byj_YQxF-eKOajlqZG34ZuZikxi8rCHoAIF7NLo/edit)
+
+## [Project demo video](https://drive.google.com/file/d/1eDeQlBxjpZ5FjrKVZeSMs634vnmTpXIE/view)
+
 ##### For Backend (Django)
 ###### Backend (Django REST Framework App)
 - Python (3.7 or higher recommended)
@@ -107,8 +113,6 @@ A user;
 ![Add Journal](images/addjournal.jpeg)
 ![Update Journal](images/updatejournal.jpeg)
 
-## Project Documentation
- - [Documentation](https://docs.google.com/document/d/1XNv-byj_YQxF-eKOajlqZG34ZuZikxi8rCHoAIF7NLo/edit)
 
 ## Support and contact details
     - email :: kelvinkipchumba002@gmail.com
