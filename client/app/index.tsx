@@ -74,8 +74,6 @@ function App() {
               <Stack.Screen name="tabs" component={TabNavigations}   options={{headerShown: false}} />
               <Stack.Screen name="Journal" component={JournalScreen} options={{headerShown: false }}/> 
               <Stack.Screen name="JournalDetail" component={JournalDetailScreen} options={{headerShown: false}} />
-              {/* <Stack.Screen name="AddJournal" component={AddJournalScreen} options={{headerShown: false}} /> */}
-              <Stack.Screen name="Summary" component={SummaryScreen} /> 
             </>
           ) : (
             <>
