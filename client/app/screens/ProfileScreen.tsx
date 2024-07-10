@@ -95,6 +95,12 @@ const ProfileScreen: React.FC = () => {
     }
   };
 
+  // toggles
+  const [showOldPassword, setShowOldPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+
   return (
     <View className="flex-1 bg-gray-100 p-4">
       <View className='min-h-[60vh]'>
@@ -216,35 +222,49 @@ const ProfileScreen: React.FC = () => {
                 
                 <Text className='mt-4' style={{fontFamily:"poppins"}}>Change Password(Optional)</Text>
                 <Text>Old Password</Text>
-                <TextInput
-                  className="border border-gray-300 p-2 mb-4 rounded-lg"
-                  placeholder="Old Password"
-                  onChangeText={handleChange('oldPassword')}
-                  onBlur={handleBlur('oldPassword')}
-                  value={values.oldPassword}
-                  secureTextEntry
-                />
+                  <View className="flex flex-row items-center border border-gray-300 p-2 mb-1 rounded-lg">
+                    <TextInput
+                      style={{flex: 1}}
+                      placeholder="Old Password"
+                      onChangeText={handleChange('oldPassword')}
+                      onBlur={handleBlur('oldPassword')}
+                      value={values.oldPassword}
+                      secureTextEntry={!showOldPassword}
+                    />
+                    <TouchableOpacity onPress={() => setShowOldPassword(!showOldPassword)}>
+                      <Ionicons name={showOldPassword ? "eye-off" : "eye"} size={20} color="gray" />
+                    </TouchableOpacity>
+                  </View>
 
-                <Text>New Password</Text>
-                <TextInput
-                  className="border border-gray-300 p-2 mb-4 rounded-lg"
-                  placeholder="New Password"
-                  onChangeText={handleChange('password')}
-                  onBlur={handleBlur('password')}
-                  value={values.password}
-                  secureTextEntry
-                />
+                  <Text>New Password</Text>
+                  <View className="flex flex-row items-center border border-gray-300 p-2 mb-1 rounded-lg">
+                    <TextInput
+                      style={{flex: 1}}
+                      placeholder="New Password"
+                      onChangeText={handleChange('password')}
+                      onBlur={handleBlur('password')}
+                      value={values.password}
+                      secureTextEntry={!showNewPassword}
+                    />
+                    <TouchableOpacity onPress={() => setShowNewPassword(!showNewPassword)}>
+                      <Ionicons name={showNewPassword ? "eye-off" : "eye"} size={20} color="gray" />
+                    </TouchableOpacity>
+                  </View>
 
-                <Text>Confirm Password</Text>
-                <TextInput
-                  className="border border-gray-300 p-2 mb-4 rounded-lg"
-                  placeholder="Confirm New Password"
-                  onChangeText={handleChange('confirmPassword')}
-                  onBlur={handleBlur('confirmPassword')}
-                  value={values.confirmPassword}
-                  secureTextEntry
-                />
-      
+                  <Text>Confirm Password</Text>
+                  <View className="flex flex-row items-center border border-gray-300 p-2 mb-1 rounded-lg">
+                    <TextInput
+                      style={{flex: 1}}
+                      placeholder="Confirm New Password"
+                      onChangeText={handleChange('confirmPassword')}
+                      onBlur={handleBlur('confirmPassword')}
+                      value={values.confirmPassword}
+                      secureTextEntry={!showConfirmPassword}
+                    />
+                  <TouchableOpacity onPress={() => setShowConfirmPassword(!showConfirmPassword)}>
+                      <Ionicons name={showConfirmPassword ? "eye-off" : "eye"} size={20} color="gray" />
+                    </TouchableOpacity>
+                  </View>
 
                 <View className="flex flex-row justify-between">                  
                   <TouchableOpacity

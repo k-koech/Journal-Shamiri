@@ -39,7 +39,7 @@ export default function TabNavigations() {
 
     }}
     />
-    <Tab.Screen name="Add Journal" component={AddJournalScreen} 
+    <Tab.Screen name="AddJournal" component={AddJournalScreen} 
                options={{
                 headerShown: false,
                 tabBarIcon: ({ focused }) => (

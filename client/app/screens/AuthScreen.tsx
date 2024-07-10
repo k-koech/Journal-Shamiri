@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { View, Text, TextInput,Platform, TouchableOpacity, Alert, ScrollView, KeyboardAvoidingView, Keyboard } from 'react-native';
 import { Toast } from 'toastify-react-native';
 import { AuthContext, useAuthContext } from '../context/AuthContext';
+import { Ionicons } from '@expo/vector-icons';
 
 
 interface RegisterParams {
@@ -23,6 +24,8 @@ export default function AuthScreen() {
 
   const [keyboard_up, setKeyboard_up] = useState<boolean>(false); // Default title size
 
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
 
   const handleSubmit = () => {
     if (isSignup) {
@@ -108,22 +111,41 @@ export default function AuthScreen() {
           placeholder="Email"
           className="border border-gray-300 placeholder-black placeholder-opacity-100 p-2 mb-2 w-full rounded-lg"
         />
-        <TextInput
+        {/* <TextInput
           value={password}
           onChangeText={setPassword}
           placeholder="Password"
           secureTextEntry
           className="border border-gray-300 placeholder-black p-2 mb-2 w-full rounded-lg"
-        />
+        /> */}
+        <View className="flex flex-row items-center border border-gray-300 p-2 mb-1 rounded-lg">
+            <TextInput
+               value={password}
+               style={{flex: 1}}
+               onChangeText={setPassword}
+               placeholder="Password"
+               secureTextEntry={!showPassword}
+            />
+            <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+              <Ionicons name={showPassword ? "eye-off" : "eye"} size={20} color="gray" />
+            </TouchableOpacity>
+          </View>
         {isSignup && (
-          <TextInput
-            value={confirmPassword}
-            onChangeText={setConfirmPassword}
-            placeholder="Confirm Password"
-            secureTextEntry
-            className="border border-gray-300 placeholder-black p-2 mb-4 w-full rounded-lg"
-          />
+
+          <View className="flex flex-row items-center border border-gray-300 p-2 mb-1 rounded-lg">
+            <TextInput
+              value={confirmPassword}
+              style={{flex: 1}}
+              onChangeText={setConfirmPassword}
+              placeholder="Confirm Password"
+              secureTextEntry={!showConfirmPassword}
+            />
+            <TouchableOpacity onPress={() => setShowConfirmPassword(!showConfirmPassword)}>
+              <Ionicons name={showConfirmPassword ? "eye-off" : "eye"} size={20} color="gray" />
+            </TouchableOpacity>
+          </View>
         )}
+
         <View className="flex flex-row justify-between mb-4">
           <TouchableOpacity onPress={handleSubmit} className="bg-[#026D87] p-2 rounded-lg">
             <Text className='text-white font-bold px-3'>{isSignup ? 'Sign Up' : 'Log In'}</Text>

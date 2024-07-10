@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, {useEffect, useState} from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import AuthScreen from './screens/AuthScreen';
@@ -12,20 +12,39 @@ import ToastManager from 'toastify-react-native';
 import { View } from 'react-native';
 import { AuthProvider, useAuthContext } from './context/AuthContext';
 import { JournalProvider } from './context/JournalContext';
+import { RootStackParamList } from './context/types';
 
-const Stack = createStackNavigator();
+// const Stack = createStackNavigator();
+const Stack = createStackNavigator<RootStackParamList>();
+
 
 export default function index() {
-  const [fontsLoaded] = useFonts({
-   "poppins": require("../assets/fonts/Poppins/Poppins-Regular.ttf"),
-   "roboto": require("../assets/fonts/Roboto/Roboto-Regular.ttf"),
-   "merienda": require("../assets/fonts/Merienda/Merienda-VariableFont_wght.ttf"),
-   "dancing_script": require('../assets/fonts/Dancing_Script/DancingScript-Bold.ttf')
-   
+
+  const [isLoaded, setIsFontLoaded] = useState<Boolean>(false)
+  const [loaded, error] = useFonts({
+        'roboto': require('../assets/fonts/Roboto/Roboto-Regular.ttf'),
+        'merienda': require('../assets/fonts/Merienda/Merienda-VariableFont_wght.ttf'),
+        'dancing_script': require('../assets/fonts/Dancing_Script/DancingScript-Bold.ttf'),
+        'poppins': require('../assets/fonts/Poppins/Poppins-Regular.ttf')
   });
-   if (!fontsLoaded) {
-    return <Spinner/>
+
+
+  useEffect(() => {
+    if (loaded || error) {
+      setIsFontLoaded(true);
+    }
+  }, [loaded, error]);
+
+  if (!loaded && !error) {
+    return null;
   }
+
+  if(!isLoaded){
+     return <Spinner/>
+  }
+
+
+
 
   return (
     <View className="flex-1 bg-white">
@@ -55,6 +74,7 @@ function App() {
               <Stack.Screen name="tabs" component={TabNavigations}   options={{headerShown: false}} />
               <Stack.Screen name="Journal" component={JournalScreen} options={{headerShown: false }}/> 
               <Stack.Screen name="JournalDetail" component={JournalDetailScreen} options={{headerShown: false}} />
+              
               <Stack.Screen name="Summary" component={SummaryScreen} /> 
             </>
           ) : (

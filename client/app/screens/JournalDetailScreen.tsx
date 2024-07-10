@@ -9,16 +9,27 @@ import { ConfirmDeleteModal } from '../components/ConfirmDeleteModal';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../context/types';
 
+// export type JournalDetailScreenProps = {
+//   route: {
+//     params: {
+//       id: string;  
+//     };
+//   };
+//   navigation: any; 
+// };
+import { RouteProp } from '@react-navigation/native';
+
+type JournalDetailScreenRouteProp = RouteProp<RootStackParamList, 'JournalDetail'>;
+
+type JournalDetailScreenNavigationProp = StackNavigationProp<RootStackParamList, 'JournalDetail'>;
+
 export type JournalDetailScreenProps = {
-  route: {
-    params: {
-      id: string;  
-    };
-  };
-  navigation: any; 
+  route: JournalDetailScreenRouteProp;
+  navigation: JournalDetailScreenNavigationProp;
 };
 
-const JournalDetailScreen: React.FC<JournalDetailScreenProps> = ({ route }) => {
+
+const JournalDetailScreen: React.FC<JournalDetailScreenProps> = ({ route, navigation }) => {
   const {journals} = useJournalContext()
   const [journalData, setJournalData] = useState<any>(null);
 
@@ -30,12 +41,10 @@ const JournalDetailScreen: React.FC<JournalDetailScreenProps> = ({ route }) => {
 
   }, [journals, id]);
 
-  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-
-
+  // const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
   function handleUpdate(){
-    navigation.navigate('Add Journal', { journal: journalData }); 
+    navigation.navigate('AddJournal', { journal: journalData }); 
   }
 
   return (

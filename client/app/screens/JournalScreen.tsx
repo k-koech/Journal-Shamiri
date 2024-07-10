@@ -5,8 +5,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { ScrollView } from 'react-native-gesture-handler';
 import { JournalEntry, useJournalContext } from '../context/JournalContext';
 
-const JournalPage: React.FC = () => {
-  const navigation = useNavigation();
+const JournalPage: React.FC<{ navigation: any }> = ({ navigation }) => {
+  const nav = useNavigation();
   const [selectedPeriod, setSelectedPeriod] = useState('daily');
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredJournals, setFilteredJournals] = useState<JournalEntry[]>([]);
@@ -58,13 +58,13 @@ const JournalPage: React.FC = () => {
   };
 
   const onNavigateToJournalDetailScreen = (journalId: number) => {
-    navigation.navigate('JournalDetail', { id: journalId });
+    navigation.navigate('JournalDetail', { id: journalId } as any);
   };
 
   return (
     <ScrollView className="flex-1 p-4 bg-gray-100">
       <TouchableOpacity
-        onPress={() => navigation.goBack()}
+        onPress={() => nav.goBack()}
         className="absolute top-4 p-2"
       >
         <Ionicons name="chevron-back" size={28} color="black" />

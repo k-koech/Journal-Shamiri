@@ -30,7 +30,7 @@ interface JournalContextType {
   createJournal: (form_data: JournalEntry ) => void;
   updateJournal: (entryId: number, data: Partial<JournalEntry>) => void;
   deleteJournal: (entryId: number) => void;
-  getSummaryBetweenDates: (startDate: string, endDate: string) => void;
+  // getSummaryBetweenDates: (startDate: string, endDate: string) => void;
 
   onJournalChange: boolean;
  setOnJournalChange: (value: boolean) => void;
