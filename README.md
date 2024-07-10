@@ -11,18 +11,18 @@
 
 ## Features
 A user;
-    - create an account.
-    - Login.
-    - Logout.
-    - update his/her own profile picture, password, name and username.
-    - view his/her own profile after login.
-    - create a journal.
-    - fetch all journal entries belonging to them.
-    - edit a specific journal entry.
-    - delete a specific journal entry.
-    - get a summary of their journals within specific dates with the summary view.
-    - search for a journal in summary page
-    - Categorize his.her own journals
+- create an account.
+- Login.
+- Logout.
+- update his/her own profile picture, password, name and username.
+- view his/her own profile after login.
+- create a journal.
+- fetch all journal entries belonging to them.
+- edit a specific journal entry.
+- delete a specific journal entry.
+- get a summary of their journals within specific dates with the summary view.
+- search for a journal in summary page
+- Categorize his.her own journals
 
 ##### For Backend (Django)
 ###### Backend (Django REST Framework App)
