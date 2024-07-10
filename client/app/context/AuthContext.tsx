@@ -89,22 +89,20 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   // Logout function
   const logout = () => {
-    // fetch(`${server_url}/user/logout`, {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //     Authorization: `Bearer ${token_pair?.access}`
-    //   }
-    // })
-    //   .then(response => response.json())
-    //   .then(() => {
-    //     Toast.success('Logout Success')
-    //     AsyncStorage.removeItem("TOKEN_PAIR");
-    //     setCurrentUser(null);
-    //   });
-    Toast.success('Logout Success')
-    AsyncStorage.removeItem("TOKEN_PAIR");
-    setCurrentUser(null);
+    fetch(`${server_url}/user/logout`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token_pair?.access}`
+      }
+    })
+      .then(response => response.json())
+      .then(() => {
+        Toast.success('Logout Success')
+        AsyncStorage.removeItem("TOKEN_PAIR");
+        setCurrentUser(null);
+      });
+
   };
 
 

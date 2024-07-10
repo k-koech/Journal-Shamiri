@@ -1,4 +1,4 @@
-from .views import signup, update_user, delete_user,current_user, create_journal_entry, list_journal_entries, edit_journal_entry, delete_journal_entry,summary, update_user, delete_user, CustomLogoutView
+from .views import signup, update_user, delete_user,current_user, create_journal_entry, list_journal_entries, edit_journal_entry, delete_journal_entry,summary, update_user, delete_user, logout
 
 from django.urls import path
 # from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
@@ -13,7 +13,7 @@ urlpatterns = [
     path("token/", TokenObtainPairView.as_view(), name="login"),
     path("user/verify", TokenVerifyView.as_view(), name="verify"),
     path("user/refresh", TokenRefreshView.as_view(), name="refresh"),
-    path('user/logout', TokenBlacklistView.as_view(), name='token_blacklist'),
+    path('user/logout', logout, name='token_blacklist'),
     
 
     path('user/delete', delete_user, name='delete_user'),

@@ -8,6 +8,9 @@ from journal.serializer import UserSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
 import os
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
+from rest_framework_simplejwt.token_blacklist.models import BlacklistedToken, OutstandingToken
 
 # Sign Up
 @api_view(['POST'])
@@ -49,39 +52,16 @@ def current_user(request):
     return JsonResponse(serializer.data)
 
 # Logout
-from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
-from rest_framework.views import APIView
-
-
-
-
-class CustomLogoutView(APIView):
-    def post(self, request, *args, **kwargs):
-        refresh_token = request.data.get('refresh')
-        access_token = request.headers.get('Authorization', None)
-        
-        if access_token:
-            access_token = access_token.split(' ')[1]  # Extract the token from the "Bearer <token>" format
-        
-        if refresh_token:
-            try:
-                token = RefreshToken(refresh_token)
-                token.blacklist()  # Blacklist the refresh token
-            except TokenError as e:
-                return JsonResponse({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-        
-        if access_token:
-            try:
-                token = RefreshToken(access_token)
-                token.blacklist() 
-            except TokenError as e:
-                return JsonResponse({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-        
-        return JsonResponse({"error": "Successfully logged out"}, status=status.HTTP_205_RESET_CONTENT)
-
-
-
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])  
+def logout(request):
+        refresh_token = request.data.get("refresh")
+        token = RefreshToken(refresh_token)
+        token.blacklist()
+        # for token in OutstandingToken.objects.filter(user=request.user):
+        #     BlacklistedToken.objects.get_or_create(token=token)
+        return JsonResponse( {"success":"Logout success!"} ,status=status.HTTP_205_RESET_CONTENT)
+   
 
 # Update User
 @api_view(['PUT'])
@@ -122,7 +102,7 @@ def update_user(request):
                     os.remove(old_image_path)
                     # Check if the folder is now empty and remove it if so
                     folder_path = os.path.dirname(old_image_path)
-                    if not os.listdir(folder_path):  # Folder is empty
+                    if not os.listdir(folder_path): 
                         os.rmdir(folder_path)
         user.save()
         return JsonResponse({"success": "User Updated Successfully"}, status=status.HTTP_200_OK)
@@ -131,7 +111,7 @@ def update_user(request):
 
 # Delete User
 @api_view(['DELETE'])
-@permission_classes([IsAuthenticated])  # Ensure that only authenticated users can delete their own account
+@permission_classes([IsAuthenticated])  #
 def delete_user(request):
     user_id = request.user.id
     if request.user.id != user_id:
