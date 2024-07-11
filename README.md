@@ -100,8 +100,8 @@ A user;
 ![Homepage2](images/homepage2.jpeg)
 
 ##### JournalDetails Screen
-- A page to show a specific Journal with all its contents unlike the summarized version in Homepage. 
 - It also has delete button for deletion, and update button which will direct the user to Addjournal screen for updating the journal.
+- A page to show a specific Journal with all its contents unlike the summarized version in Homepage. 
 ![Journal Details](images/journaldetails.jpeg)
 
 ##### Summary Screen
