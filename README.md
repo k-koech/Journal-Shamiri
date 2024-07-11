@@ -92,7 +92,9 @@ A user;
 - view and delete a journal( delete button appears once you slide a journal card)
 - filter journals based on categories by clicking of a specific category
 - view individual journal by clicking on the card
-- A use can View his/her profile and can go to profile page by clicking on it
+- Click on summary of  Journals and View all journals and can filter them by dates, (daily, monthly and weekly) and also search by 
+  title or content
+- View his/her profile and can go to profile page by clicking on it
 
 ![Homepage1](images/homepage1.jpeg)
 ![Homepage2](images/homepage2.jpeg)
